@@ -1,4 +1,4 @@
-mode: auto
+mode: dark
 
 banner:
   enable: true
@@ -23,7 +23,7 @@ avatar:
   status:
     enable: true
     emoji: 💘
-    message: 喜欢你
+    message: 喜欢你哦
 
 github_issues:
   enable: false
@@ -44,14 +44,6 @@ giscus:
 
 engine_search:
   enable: false
-
-google_analytics:
-  enable: true
-  id: G-1LL0D86CY9
-
-google_adsense:
-  enable: true
-  client: ca-pub-2245427233262012
 
 post_edit:
   enable: true
@@ -75,10 +67,6 @@ categories:
   云游的小视频: '#FB7299'
 
 pages:
-  - name: 我的小伙伴们
-    url: /links/
-    icon: ri:genderless-line
-    color: dodgerblue
   - name: 喜欢的女孩子
     url: /girls/
     icon: ri:women-line
@@ -94,3 +82,6 @@ cursor:
   enable: true
 
 baidu_push: true
+
+cdn:
+  pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
