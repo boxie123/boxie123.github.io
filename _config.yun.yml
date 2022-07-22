@@ -1,4 +1,4 @@
-mode: dark
+mode: auto
 
 banner:
   enable: true
@@ -33,14 +33,14 @@ github_discussions:
 
 # https://github.com/laymonage/giscus
 giscus:
-  enable: true
+  enable: false
   repo: boxie123/boxie123.github.io
   repo-id:
   category-id:
   mapping: pathname
   reactions-enabled: 1
   emit-metadata: 0
-  theme: light
+  theme: dark
 
 engine_search:
   enable: false
@@ -85,3 +85,20 @@ baidu_push: true
 
 cdn:
   pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
+
+comment:
+  enable: true
+  tips:
+    - 若您想及时得到回复提醒，建议跳转 GitHub Issues 评论。
+    - 若没有本文 Issue，您可以使用 Comment 模版新建。
+  github_issues:
+    enable: true
+    username: boxie123
+    repository: boxie123.github.io
+    filters: is:issue
+
+  github_discussions:
+    enable: true
+    username: boxie123
+    repository: boxie123.github.io
+
