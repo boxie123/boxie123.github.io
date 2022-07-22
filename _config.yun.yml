@@ -55,7 +55,7 @@ google_adsense:
 
 post_edit:
   enable: true
-  url: https://github.com/YunYouJun/yunyoujun.github.io/tree/hexo/source/
+  url: https://github.com/boxie123/boxie123.github.io/tree/hexo/source/
 
 albums:
   enable: true
@@ -64,21 +64,12 @@ girls:
   enable: true
 
 tags:
-  动画: crimson
-  漫画: orange
-  Parcel: '#21374b'
+  艾鸽: pink
   学习: saddlebrown
-  MAD: crimson
   教程: royalblue
   笔记: dimgray
   分享: '#0078e7'
   随笔: mediumpurple
-  Blender: '#d04d2d'
-  Linux: '#2577b1'
-  中传: '#ccb44b'
-  部落: '#DD306A'
-  科幻: midnightblue
-  蚂蚁森林: '#54a892'
 
 categories:
   云游的小视频: '#FB7299'
@@ -103,12 +94,3 @@ cursor:
   enable: true
 
 baidu_push: true
-
-google_tagmanager:
-  enable: true
-  id: GTM-M9KWR9L
-
-say:
-  api: https://el-bot-api.vercel.app/api/words/young
-  hitokoto:
-    enable: false
