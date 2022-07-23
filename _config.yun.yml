@@ -18,7 +18,11 @@ bg_image:
   opacity: 0.8
 
 reward:
-  enable: false
+  enable: true
+  icon: ri:bilibili-line
+  color: '#FF8EB3'
+  url: https://space.bilibili.com/1485569
+  comment: 给可爱的鸽宝点个关注吧！
 
 fireworks:
   enable: true
@@ -70,7 +74,7 @@ tags:
   艾鸽: hotpink
   学习: saddlebrown
   教程: royalblue
-  笔记: dimgray
+  笔记: gold
   分享: '#0078e7'
   随笔: mediumpurple
 
@@ -149,3 +153,19 @@ social:
     link: tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1824390830&website=www.oicqzone.com
     icon: ri:qq-line
     color: '#12B7F5'
+
+footer:
+  since: 2022
+  icon:
+    name: carbon:chemistry
+    animated: true
+    color: '#0078E7'
+    url: https://boxie123.github.io/about/
+    title: 铂屑
+
+mourn:
+  enable: true
+  days:
+    - 4-4
+    - 7-7
+    - 9-18
