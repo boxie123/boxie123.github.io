@@ -11,6 +11,12 @@ banner:
     enable: true
     icon: ri:arrow-down-s-line
 
+bg_image:
+  enable: true
+  url: /images/bg.jpg
+  # dark:
+  opacity: 0.8
+
 reward:
   enable: false
 
@@ -28,12 +34,6 @@ avatar:
     emoji: 💘
     message: 喜欢你哦
 
-github_issues:
-  enable: false
-
-github_discussions:
-  enable: false
-
 # https://github.com/laymonage/giscus
 giscus:
   enable: false
@@ -44,6 +44,9 @@ giscus:
   reactions-enabled: 1
   emit-metadata: 0
   theme: dark
+
+search:
+  modal: true
 
 engine_search:
   enable: false
@@ -64,7 +67,7 @@ girls:
   enable: true
 
 tags:
-  艾鸽: pink
+  艾鸽: hotpink
   学习: saddlebrown
   教程: royalblue
   笔记: dimgray
@@ -72,12 +75,12 @@ tags:
   随笔: mediumpurple
 
 categories:
-  云游的小视频: '#FB7299'
+  铂屑的随手记录: '#FB7299'
 
 pages:
   - name: 喜欢的女孩子
     url: /girls/
-    icon: ri:women-line
+    icon: ri:heart-line
     color: hotpink
 
 menu:
@@ -94,24 +97,40 @@ cursor:
 
 baidu_push: true
 
-cdn:
-  pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
+# cdn:
+#   pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
 
 comment:
   enable: true
+  candidates:
+    # - waline
   tips:
     - 若您想及时得到回复提醒，建议跳转 GitHub Issues 评论。
     - 若没有本文 Issue，您可以使用 Comment 模版新建。
-  github_issues:
-    enable: true
-    username: boxie123
-    repository: boxie123.github.io
-    filters: is:issue
 
-  github_discussions:
-    enable: true
-    username: boxie123
-    repository: boxie123.github.io
+waline:
+  enable: false
+  serverURL: https://waline-test-8avuqqjwr-boxie123.vercel.app/
+  visitor: true
+  comment: true
+  emoji:
+    - https://fastly.jsdelivr.net/gh/walinejs/emojis@latest/bilibili/
+    - https://fastly.jsdelivr.net/gh/walinejs/emojis@latest/weibo/
+    - https://fastly.jsdelivr.net/gh/walinejs/emojis@latest/qq/
+  locale:
+    placeholder: 填写邮箱，可以收到回复通知哦～
+  requiredMeta: [nick]
+
+github_issues:
+  enable: true
+  username: boxie123
+  repository: boxie123.github.io
+  filters: is:issue
+
+github_discussions:
+  enable: true
+  username: boxie123
+  repository: boxie123.github.io
 
 social:
   - name: GitHub
