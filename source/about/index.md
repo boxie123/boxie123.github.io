@@ -1,5 +1,9 @@
 ---
-layout: 404
-title: 未曾记录的时间尽头
-reward: false
+title: 铂屑
+date: 2022-07-23 18:41:30
+type: "about"
+icon: carbon:chemistry
+iconify: true
 ---
+
+> 化学专业在读，计算机小白，写作苦手，当前页面完善中。

@@ -80,7 +80,7 @@ categories:
 pages:
   - name: 喜欢的女孩子
     url: /girls/
-    icon: ri:heart-line
+    icon: ri:hearts-line
     color: hotpink
 
 menu:
@@ -106,7 +106,7 @@ comment:
     # - waline
   tips:
     - 若您想及时得到回复提醒，建议跳转 GitHub Issues 评论。
-    - 若没有本文 Issue，您可以使用 Comment 模版新建。
+    - 欢迎直接加我QQ好友哦
 
 waline:
   enable: false
@@ -145,3 +145,7 @@ social:
     link: mailto:platinum0shard@gmail.com
     icon: ri:mail-line
     color: '#8E71C1'
+  - name: 添加QQ好友
+    link: tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1824390830&website=www.oicqzone.com
+    icon: ri:qq-line
+    color: '#12B7F5'
