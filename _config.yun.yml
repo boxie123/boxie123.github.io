@@ -94,7 +94,7 @@ menu:
     icon: ri:clipboard-line
 
 wordcloud:
-  enable: true
+  enable: false
 
 cursor:
   enable: true
@@ -172,3 +172,8 @@ mourn:
 
 codeblock:
   copy_btn: true
+
+wordcount:
+  enable: true
+  count: true
+  time: true

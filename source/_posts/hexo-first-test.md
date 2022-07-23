@@ -1,7 +1,8 @@
 ---
-title: 初识
+title: 初识hexo
 author: 铂屑
 date: 2022-07-23 04:57:57
+updated: 2022-07-24 03:06:52
 tags:
     - 随笔
     - 笔记
@@ -117,16 +118,26 @@ git push
 编写`bash`脚本，方便之后提交。
 > 详见`update.sh`文件。
 
-同理，每次部署都需要三条`hexo`命令，尝试通过`GitHub Action`完成自动部署：
+同理，每次部署都需要三条`hexo`命令，尝试通过`GitHub Action`完成自动部署。
 
+云游君提供的`gh-pages.yml`文件中使用`pnmp`进行包管理，但前述过程仅使用`npm`，且由于我较不熟悉`pnmp`使用，
+目前本项目并未实现自动部署。
 
+~~其实手动输三条命令也不太麻烦是吧~~
 
-&emsp;
+### 开始创作！
 
-&emsp;
+```sh-session
+# 新建文章
+hexo new post xxx
+# 新建页面
+hexo new page xxx
+```
 
-&emsp;
+至此，页面创作之旅正式开始啦！
 
-&emsp;
+## 结语
 
-> **未完待续**
+再次感谢云游君所写的主题与详细教程，愿更多想拥有自己网站的小伙伴早日实现愿望。
+
+> 如需帮助，向我提 [Issues](https://github.com/boxie123/boxie123.github.io/issues?q=is:issue+%E5%88%9D%E8%AF%86) 和 [Discussion](https://github.com/boxie123/boxie123.github.io/discussions/new) 吧！
