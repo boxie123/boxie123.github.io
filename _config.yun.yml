@@ -169,3 +169,6 @@ mourn:
     - 4-4
     - 7-7
     - 9-18
+
+codeblock:
+  copy_btn: true
