@@ -11,6 +11,9 @@ banner:
     enable: true
     icon: ri:arrow-down-s-line
 
+reward:
+  enable: false
+
 fireworks:
   enable: true
   colors:
@@ -45,6 +48,11 @@ giscus:
 engine_search:
   enable: false
 
+# search
+# https://github.com/next-theme/hexo-generator-searchdb
+local_search:
+  enable: true
+
 post_edit:
   enable: true
   url: https://github.com/boxie123/boxie123.github.io/tree/hexo/source/
@@ -78,6 +86,9 @@ menu:
     path: /about/#comment
     icon: ri:clipboard-line
 
+wordcloud:
+  enable: true
+
 cursor:
   enable: true
 
@@ -102,3 +113,16 @@ comment:
     username: boxie123
     repository: boxie123.github.io
 
+social:
+  - name: GitHub
+    link: https://github.com/boxie123
+    icon: ri:github-line
+    color: '#6e5494'
+  - name: 哔哩哔哩
+    link: https://space.bilibili.com/35192025
+    icon: ri:bilibili-line
+    color: '#FF8EB3'
+  - name: E-Mail
+    link: mailto:platinum0shard@gmail.com
+    icon: ri:mail-line
+    color: '#8E71C1'
