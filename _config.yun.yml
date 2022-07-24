@@ -164,6 +164,13 @@ footer:
     color: '#0078E7'
     url: https://boxie123.github.io/about/
     title: 铂屑
+  powered:
+    enable: false
+  live_time:
+    enable: true
+    prefix: 本博客已上工
+    suffix: （；´д｀）ゞ
+    start_time: '2022-07-23T04:57:57'
 
 mourn:
   enable: true
