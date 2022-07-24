@@ -39,16 +39,16 @@ katex: true
 ### Hexo
 > 基于***Node.js***的博客框架，具有完善的生态，众多功能强大的插件，构建快速简洁。
 
-```sh-session
-npm install hexo-cli -g
+```sh
 # -g 意为为全局安装，否则将安装到当前文件夹
-hexo init boxie123.github.io
+npm install hexo-cli -g
 # 新建名为boxie123.github.io的文件夹并初始化框架
+hexo init boxie123.github.io
 ```
 
-云游君似乎构建了另一套代替 Hexo 的博客框架，推荐大家去尝试一下。
+云游君似乎正在构建另一套[代替 Hexo 的博客框架](https://github.com/YunYouJun/valaxy)，推荐大家去尝试一下。
 
-```sh-session
+```sh
 # 定位工作目录到上一步新建的文件夹中
 cd boxie123.github.io
 # 默认安装所有 `package.json` 文件中提到的包
@@ -69,7 +69,7 @@ npm i hexo-theme-yun
 
 ### 部署
 
-```sh-session
+```sh
 # 清除缓存文件
 hexo clean
 # 生成静态文件
@@ -91,7 +91,7 @@ deploy:
   message: Update Hexo Static Content # 你可以自定义此次部署更新的说明
 ```
 
-```sh-session
+```sh
 # 正式部署
 hexo deploy
 ```
@@ -104,7 +104,7 @@ hexo deploy
 
 ### 备份与自动部署
 
-```sh-session
+```sh
 # 与远程 Git 仓库建立连接，只此一次即可
 git remote add origin https://github.com/boxie123/boxie123.github.io
 # 添加到缓存区
@@ -117,7 +117,7 @@ git push
 ```
 
 编写`bash`脚本，方便之后提交。
-> 详见`update.sh`文件。
+> 详见[`update.sh`](https://github.com/boxie123/boxie123.github.io/blob/hexo/update.sh)文件。
 
 同理，每次部署都需要三条`hexo`命令，尝试通过`GitHub Action`完成自动部署。
 
