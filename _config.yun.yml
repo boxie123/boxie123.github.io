@@ -13,7 +13,7 @@ banner:
 
 bg_image:
   enable: true
-  url: /images/bg.jpg
+  url: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/bg.jpg
   # dark:
   opacity: 0.8
 
@@ -32,7 +32,7 @@ fireworks:
     - '33, 78, 194'
 
 avatar:
-  url: /images/face.jpg
+  url: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/face.jpg
   status:
     enable: true
     emoji: 💘
