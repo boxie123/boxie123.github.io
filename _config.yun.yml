@@ -19,10 +19,21 @@ bg_image:
 
 reward:
   enable: true
-  icon: ri:bilibili-line
+  icon: ri:hand-heart-line
   color: '#FF8EB3'
-  url: https://space.bilibili.com/1485569
-  comment: 给可爱的鸽宝点个关注吧！
+  # url: https://space.bilibili.com/1485569
+  comment: 给可爱的鸽宝一点支持吧ヾ(•ω•`)o
+  methods:
+    - name: 关注！
+      path: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/aigeface.jpg
+      link: https://space.bilibili.com/1485569
+      color: darkred
+      icon: ri:user-add-line
+    - name: 充电！
+      path: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/aigeface2.jpg
+      link: https://www.bilibili.com/v/pay/charge?upmid=1485569&upurl=%2F%2Fspace.bilibili.com%2F1485569&upname=%E8%89%BE%E9%B8%BD%E6%B3%B0%E5%B0%94%E5%BE%B7&upavatar=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2Fc86cec17c8343a4b7a5f7e2d29447a9ba521a5be.jpg&oid=1485569&otype=up&from=zone
+      color: gold
+      icon: ri:battery-saver-line
 
 fireworks:
   enable: true
@@ -78,10 +89,12 @@ tags:
   分享: '#0078e7'
   随笔: mediumpurple
   hexo: sienna
-  化学: royalblue
+  化学: cyan
 
 categories:
   铂屑的随手记录: '#FB7299'
+  页面开发: lime
+  小玩具: navy
 
 pages:
   - name: 喜欢的女孩子
@@ -109,14 +122,14 @@ baidu_push: true
 comment:
   enable: true
   candidates:
-    # - waline
+    - waline
   tips:
     - 若您想及时得到回复提醒，建议跳转 GitHub Issues 评论。
     - 欢迎直接加我QQ好友哦
 
 waline:
-  enable: false
-  serverURL: https://waline-test-8avuqqjwr-boxie123.vercel.app/
+  enable: true
+  serverURL: https://hexo-1v0nhftyo-boxie123.vercel.app/
   visitor: true
   comment: true
   emoji:
