@@ -2,7 +2,7 @@
 title: 初识hexo
 author: 铂屑
 date: 2022-07-23 04:57:57
-updated: 2022-07-24 03:06:52
+updated: 2022-07-26 16:06:42
 tags:
     - 随笔
     - 笔记
@@ -61,7 +61,7 @@ hexo server
 
 ### hexo-theme-yun
 
-```sh-session
+```sh
 npm i hexo-theme-yun
 ```
 
@@ -124,11 +124,11 @@ git push
 云游君提供的`gh-pages.yml`文件中使用`pnmp`进行包管理，但前述过程仅使用`npm`，且由于我较不熟悉`pnmp`使用，
 目前本项目并未实现自动部署。
 
-~~其实手动输三条命令也不太麻烦是吧~~
+<span class="heimu" title="（确信）">~~其实手动输三条命令也不太麻烦是吧~~</span>
 
 ### 开始创作！
 
-```sh-session
+```sh
 # 新建文章
 hexo new post xxx
 # 新建页面
@@ -153,7 +153,7 @@ hexo new page xxx
 
 跳转`GitHub Issues`评论毕竟不太方便，而且**GFW**时不时的屏蔽更是让国内大多数用户望而却步。
 
-> ~~所以又抄了云游君的评论区哒~~
+> ~~所以又抄了云游君的评论区~~
 
 同样，使用`Waline`和`Vercel`搭建，参考[`Waline`文档](https://waline.js.org/guide/get-started.html)。
 
