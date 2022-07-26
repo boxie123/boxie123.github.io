@@ -1468,9 +1468,9 @@
   "version" "0.0.3"
 
 "hexo-theme-yun@^1.10.5":
-  "integrity" "sha512-SsRTSrScFbKk6QIFRskRHXFONDgq8xuCfSP5JXoBowY2eUnjDnqkAN9L9KUdZzfLHagCEdDhCuJKUrOTwXu3Nw=="
-  "resolved" "https://registry.npmmirror.com/hexo-theme-yun/-/hexo-theme-yun-1.10.5.tgz"
-  "version" "1.10.5"
+  "integrity" "sha512-feguIUNLB21IuA/g4ubxNxUGEzZnlLMdciIaN6jW15bvz2qGkX4HnIFUOT3SLyjNRvf5KHAF26VUo2ROtwgQaw=="
+  "resolved" "https://registry.npmmirror.com/hexo-theme-yun/-/hexo-theme-yun-1.10.6.tgz"
+  "version" "1.10.6"
 
 "hexo-util@^2.0.0", "hexo-util@^2.1.0", "hexo-util@^2.5.0", "hexo-util@^2.6.1":
   "integrity" "sha512-xj1jUrId2qTe8L/tRizWWRl+j7X1Zzh5rCVtffboOU0p/EfbPomxIxDvntTHT3fcqgvLHsncqJF9V5j7+buOqA=="
