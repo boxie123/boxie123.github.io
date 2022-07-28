@@ -6,12 +6,14 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "dev": "cross-env NODE_ENV=development && hexo s"
   },
   "hexo": {
     "version": "6.2.0"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "giscus": "^1.0.6",
     "hexo": "^6.2.0",
     "hexo-deployer-git": "^3.0.0",

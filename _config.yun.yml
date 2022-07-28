@@ -181,8 +181,8 @@ categories:
 # 附加功能
 baidu_push: true
 
-# cdn:
-#   pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
+cdn:
+  pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
 
 mourn:
   enable: true

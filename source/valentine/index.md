@@ -2,19 +2,16 @@
 layout: false
 ---
 
-{% raw %}
 <!doctype html>
 <html lang="">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Valentine</title>
-
+    <title>七夕</title>
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-    
   </head>
   <body>
     <div class="container">
@@ -142,4 +139,3 @@ layout: false
     <!-- endbuild -->
   </body>
 </html>
-{% endraw %}
