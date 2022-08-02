@@ -38,6 +38,7 @@ footer:
     prefix: 本博客已上工
     suffix: （；´д｀）ゞ
     start_time: '2022-07-23T04:57:57'
+favicon: /favicon.ico
 
 
 # 侧边栏
@@ -170,19 +171,18 @@ tags:
   随笔: mediumpurple
   hexo: sienna
   化学: cyan
+  Python: mediumblue
 wordcloud:
   enable: false
 categories:
   铂屑的随手记录: '#FB7299'
+  后端编程: mediumorchid 
   页面开发: lime
   小玩具: navy
 
 
 # 附加功能
 baidu_push: true
-
-cdn:
-  pre: https://cdn.jsdelivr.net/gh/boxie123/boxie123.github.io@latest
 
 mourn:
   enable: true
