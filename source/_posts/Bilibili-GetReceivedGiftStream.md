@@ -45,18 +45,95 @@ categories:
 
 ![cookies-example](https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/post/cookies-example.png)
 
-让用户自己去网页复制`cookies`虽然可行，~~但会显得我技术不行！~~ 所以登录模块应运而生。
+让用户自己去网页复制`cookies`虽然可行，~~但会显得我技术不行！~~ 
+
+更优雅的方式应是通过模拟登录自动获取`cookies`。
 
 ### 模拟登录
 
 本文件采用模拟扫码登陆，获取返回的`cookies`值。
 
-首先来到 bilibili 的[登陆页面](https://passport.bilibili.com/login)，通过开发者工具的网络日志，可以看到，首先向网址`https://passport.bilibili.com/qrcode/getLoginUrl`发送了`Get`请求，返回了`oauthKey`和`url`等数据，其中`oauthKey`就是此二维码的**验证密钥**，我们暂时储存下来。
+首先来到 bilibili 的[登陆页面](https://passport.bilibili.com/login)，通过开发者工具的网络日志，可以看到，首先向网址`https://passport.bilibili.com/qrcode/getLoginUrl`发送了 GET 请求，返回了`oauthKey`和`url`等数据，其中`oauthKey`就是此二维码的**验证密钥**，我们暂时储存下来。
 
-再次向刚刚得到的`url`发送`Get`请求，得到二维码对应的链接。
+但是在网络日志中并未找到二维码获取的网址，查找源代码，可看到以下代码：
 
-> 咕咕咕 什么时候有时间再继续写
+```javascript
+getQrcode: function() {
+                    var e = this;
+                    $.ajax({
+                        url: "https://passport.bilibili.com/qrcode/getLoginUrl",
+                        dataType: "json"
+                    }).done(function(t) {
+                        if (t.status) {
+                            e.refer ? (e.refer.clear(),
+                            e.refer.makeCode(t.data.url)) : e.$nextTick(function() {
+                                e.refer = new QRCode(e.$refs.qrcode,{
+                                    text: t.data.url,
+                                    width: 140,
+                                    height: 140
+                                })
+                            }),
+                            e.key = t.data.oauthKey;
+                            var i = decodeURIComponent(Object(f.h)("gourl"));
+                            clearTimeout(e.cd),
+                            e.cd = setTimeout(e.expire, e.cdTime),
+                            clearInterval(e.loop),
+                            e.loop = setInterval(function() {
+                                $.ajax({
+                                    url: "https://passport.bilibili.com/qrcode/getLoginInfo",
+                                    dataType: "json",
+                                    type: "POST",
+                                    data: {
+                                        oauthKey: e.key,
+                                        gourl: i || (document.referrer || "")
+                                    }
+                                }).done(function(t) {
+                                    t.status ? (reportMsgObj.qrcodescan_login = "success",
+                                    window.reportObserver && window.reportObserver.forceCommit && window.reportObserver.forceCommit(),
+                                    window.location.href = t.data.url) : t.status || -2 != t.message ? t.status || -5 != t.data || e.scanSucess() : e.expire()
+                                })
+                            }, e.loopTime)
+                        }
+                    })
+                },
+```
+
+
+
+可看到是再次向刚刚得到的`url`发送 GET 请求，得到二维码对应的链接，并通过 js 直接生成 Base64 发送到前端。
+
+转化为 Python 代码即为引入`qrcode`库将链接转为二维码。
+
+> 使用`showpng`类新建线程，可不存储到本地，直接显示二维码图片。
+
+同样，通过网络日志可以看到，每两秒浏览器就会向`https://passport.bilibili.com/qrcode/getLoginInfo`发送 POST 请求来确定登陆状态，其中：
+
+> ‘data’: -4：二维码未失效
+> 
+> ‘data’: -5：已扫码
+>
+> ‘data’: -2：二维码已失效
+>
+> ‘status’: True：已登录
+
+构建`while True`循环，并在每次循环后等待两秒。
+
+访问登陆成功后返回的带参数的`url`，获取`cookies`值并存储。
+
+### 验证登陆状态
+
+同样，向`https://api.bilibili.com/x/web-interface/nav`发送 GET 请求，通过返回数据判断：
+
+> 'code': -101 即为未登录；
+>
+> 'code': 0 即为已登录。
+
+最后，通过`session.cookies.save()`保存到本地，下次直接读取。
 
 ## getGift.py
 
+> 咕咕咕 什么时候有时间再继续写
+
 ## main.py
+
+## agent.py
