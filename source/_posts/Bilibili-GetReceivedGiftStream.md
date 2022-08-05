@@ -98,8 +98,6 @@ getQrcode: function() {
                 },
 ```
 
-
-
 可看到是再次向刚刚得到的`url`发送 GET 请求，得到二维码对应的链接，并通过 js 直接生成 Base64 发送到前端。
 
 转化为 Python 代码即为引入`qrcode`库将链接转为二维码。
@@ -128,9 +126,41 @@ getQrcode: function() {
 >
 > 'code': 0 即为已登录。
 
-最后，通过`session.cookies.save()`保存到本地，下次直接读取。
+### Cookies 的储存与读取
+
+因 requests 库的官网已无法访问（详见[此文](https://www.163.com/dy/article/H8QB97VK0511CUMI.html)），此处仅大致介绍 CookieJar 相关用法，并建议读者尽量转用`httpx`或`aiohttp`等代替。
+
+什么是 CookieJar 呢？
+
+> CookieJar 是 requests 定义的类，requests 只能保持 cookiejar 类型的 cookie ，而我们手动构建的 cookie 是 dict 类型的。所以要把 dict 转为 cookiejar 类型。
+
+其中又包含四种子类：
+
+- `CookieJar`：管理HTTP cookie值、存储HTTP请求生成的cookie、向传出的HTTP请求添加cookie的对象。整个cookie都存储在内存中，对CookieJar实例进行垃圾回收后cookie也将丢失。
+- `FileCookieJar` (filename,delayload=None,policy=None)：从CookieJar派生而来，用来创建FileCookieJar实例，检索cookie信息并将cookie存储到文件中。filename是存储cookie的文件名。delayload为True时支持延迟访问访问文件，即只有在需要时才读取文件或在文件中存储数据。
+- `MozillaCookieJar` (filename,delayload=None,policy=None)：从FileCookieJar派生而来，创建与Mozilla浏览器 cookies.txt兼容的FileCookieJar实例。
+- `LWPCookieJar` (filename,delayload=None,policy=None)：从FileCookieJar派生而来，创建与libwww-perl标准的 Set-Cookie3 文件格式兼容的FileCookieJar实例。
+
+> 一般来说我们仅会用到后两种。
+
+此处采用`LWPCookieJar`保存获得的 Cookies 。首先导入 cookiejar 类：
+
+```py
+import http.cookiejar as cookielib
+```
+
+创建 session 链接并从文件读取 cookies：
+
+```py
+session = requests.session()
+session.cookies = cookielib.LWPCookieJar(filename=filename)
+```
+
+最后，获取到 cookies 后，通过`session.cookies.save()`保存到本地，下次直接读取。
 
 ## getGift.py
+
+
 
 > 咕咕咕 什么时候有时间再继续写
 
