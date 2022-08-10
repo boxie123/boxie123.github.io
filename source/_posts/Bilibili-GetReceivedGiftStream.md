@@ -2,7 +2,7 @@
 title: Bilibili GetReceivedGiftStream
 author: 铂屑
 date: 2022-08-03 23:47:36
-updated: 2022-08-03 23:47:36
+updated: 2022-08-07 21:08:25
 tags:
     - Python
     - 分享
@@ -130,6 +130,8 @@ getQrcode: function() {
 
 因 requests 库的官网已无法访问（详见[此文](https://www.163.com/dy/article/H8QB97VK0511CUMI.html)），此处仅大致介绍 CookieJar 相关用法，并建议读者尽量转用`httpx`或`aiohttp`等代替。
 
+其中`httpx`在几乎完美代替`requests`的基础上支持了异步操作。
+
 什么是 CookieJar 呢？
 
 > CookieJar 是 requests 定义的类，requests 只能保持 cookiejar 类型的 cookie ，而我们手动构建的 cookie 是 dict 类型的。所以要把 dict 转为 cookiejar 类型。
@@ -159,6 +161,8 @@ session.cookies = cookielib.LWPCookieJar(filename=filename)
 最后，获取到 cookies 后，通过`session.cookies.save()`保存到本地，下次直接读取。
 
 ## getGift.py
+
+因爬取礼物流水数据可能需要多次发送请求，本模块采用异步操作提高效率，引入`aiohttp`库。
 
 
 
