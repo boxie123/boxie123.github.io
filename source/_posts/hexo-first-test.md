@@ -121,8 +121,10 @@ git push
 
 同理，每次部署都需要三条`hexo`命令，尝试通过`GitHub Action`完成自动部署。
 
-云游君提供的`gh-pages.yml`文件中使用`pnmp`进行包管理，但前述过程仅使用`npm`，且由于我较不熟悉`pnmp`使用，
-目前本项目并未实现自动部署。
+~~云游君提供的`gh-pages.yml`文件中使用`pnmp`进行包管理，但前述过程仅使用`npm`，且由于我较不熟悉`pnmp`使用，
+目前本项目并未实现自动部署。~~
+
+参考[《初探无后端静态博客自动化部署方案》](https://blog.ichr.me/post/automated-deployment-of-serverless-static-blog/#GitHub-Actions)实现自动部署啦。
 
 <span class="heimu" title="（确信）">~~其实手动输三条命令也不太麻烦是吧~~</span>
 
