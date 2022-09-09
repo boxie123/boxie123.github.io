@@ -1,7 +1,7 @@
-name: GitHub Pages
+name: Pull Requests Check
 
 on:
-  push:
+  pull_request:
     branches:
       - hexo
 
@@ -25,11 +25,3 @@ jobs:
       - name: Generate
         run: |
           npm i && npx hexo g
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: master
-          force_orphan: true
