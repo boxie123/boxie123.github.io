@@ -11,7 +11,7 @@ iconify: true
 
 <div class="text-center">
   <div class="site-author-avatar">
-    <img src="https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/face.jpg" alt="portrait" title="铂屑">
+    <img src="/images/face.jpg" alt="portrait" title="铂屑">
   </div>
 </div>
 

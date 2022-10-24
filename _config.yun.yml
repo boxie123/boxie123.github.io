@@ -12,7 +12,7 @@ banner:
     icon: ri:arrow-down-s-line
 bg_image:
   enable: true
-  url: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/bg.jpg
+  url: /images/bg.jpg
   # dark:
   opacity: 0.8
 fireworks:
@@ -43,7 +43,7 @@ favicon: /favicon.ico
 
 # 侧边栏
 avatar:
-  url: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/face.jpg
+  url: /images/face.jpg
   status:
     enable: true
     emoji: 💘
@@ -140,12 +140,12 @@ reward:
   comment: 给可爱的鸽宝一点支持吧ヾ(•ω•`)o
   methods:
     - name: 关注！
-      path: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/aigeface.jpg
+      path: /images/aigeface.jpg
       link: https://space.bilibili.com/1485569
       color: darkred
       icon: ri:user-add-line
     - name: 充电！
-      path: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/aigeface2.jpg
+      path: /images/aigeface2.jpg
       link: https://www.bilibili.com/v/pay/charge?upmid=1485569&upurl=%2F%2Fspace.bilibili.com%2F1485569&upname=%E8%89%BE%E9%B8%BD%E6%B3%B0%E5%B0%94%E5%BE%B7&upavatar=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2Fc86cec17c8343a4b7a5f7e2d29447a9ba521a5be.jpg&oid=1485569&otype=up&from=zone
       color: gold
       icon: ri:battery-saver-line

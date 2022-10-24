@@ -43,7 +43,7 @@ categories:
 
 而在已经登陆过的浏览器上，打开开发者工具，同样可以看到本网页对应的`cookies`：
 
-![cookies-example](https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/post/cookies-example.png)
+![cookies-example](/images/post/cookies-example.png)
 
 让用户自己去网页复制`cookies`虽然可行，~~但会显得我技术不行！~~ 
 

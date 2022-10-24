@@ -5,7 +5,7 @@ banner: <span title="是天使！">她没失踪也没怎样，我只是觉得大
 comments: false
 girls:
   - name: 艾鸽
-    avatar: https://boxie123-1305125924.cos.ap-beijing.myqcloud.com/images/aigeface.jpg
+    avatar: /images/aigeface.jpg
     from: 虚拟区
     url: https://space.bilibili.com/1485569
     reason: 她就是天使！
