@@ -29,6 +29,6 @@
         "hexo-server": "^3.0.0",
         "hexo-theme-yun": "^1.10.9",
         "hexo-wordcount": "^6.0.1",
-        "vercel": "^28.4.4"
+        "vercel": "^28.10.2"
     }
 }
