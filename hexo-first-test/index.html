@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="铂屑"><meta name="copyright" content="铂屑"><meta name="generator" content="Hexo 6.3.0"><meta name="theme" content="hexo-theme-yun"><title>初识hexo | 铂屑的记录点</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="stylesheet" type="text/css" href="https://fastly.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://fastly.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://fastly.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://fastly.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://fastly.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script type="module">import { renderKatex } from '/js/utils.js'
+document.addEventListener("DOMContentLoaded", () => {
+  renderKatex({
+    ...{},
+    ...true?.options,
+  });
+});</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"boxie123.github.io","root":"/","title":"铂屑的记录点","version":"1.10.9","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"waline":{"config":{"enable":true,"serverURL":"https://hexo-1v0nhftyo-boxie123.vercel.app/","comment":true,"visitor":true,"emoji":null,"locale":{"placeholder":"填写邮箱，可以收到回复通知哦～"},"requiredMeta":["nick"],"el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="不知从何时起有了建一个属于自己的页面的想法，碍于时间与金钱成本，久久未能实现。 相遇不久前， GitHub 的 For You 功能为我推荐了云游君，他的文章《教你如何从零开始搭建一个属于自己的网站》让我拥有一个自己网站的想法前所未有地重燃起来。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识hexo">
+<meta property="og:url" content="https://boxie123.github.io/hexo-first-test/index.html">
+<meta property="og:site_name" content="铂屑的记录点">
+<meta property="og:description" content="不知从何时起有了建一个属于自己的页面的想法，碍于时间与金钱成本，久久未能实现。 相遇不久前， GitHub 的 For You 功能为我推荐了云游君，他的文章《教你如何从零开始搭建一个属于自己的网站》让我拥有一个自己网站的想法前所未有地重燃起来。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-22T20:57:57.000Z">
+<meta property="article:modified_time" content="2022-07-26T08:06:42.000Z">
+<meta property="article:author" content="铂屑">
+<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="铂屑"><img width="96" loading="lazy" src="/images/face.jpg" alt="铂屑"><span class="site-author-status" title="喜欢你哦">💘</span></a><div class="site-author-name"><a href="/about/">铂屑</a></div><span class="site-name">铂屑的记录点</span><sub class="site-subtitle">时光手札</sub><div class="site-description">听说鼠标悬停在侧边栏的心心上会有惊喜哦</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="我的主页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">9</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">10</span></a></div><a class="site-state-item hty-icon-button" href="/about/#comment" title="留言板"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:clipboard-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/boxie123" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/35192025" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:platinum0shard@gmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1824390830&amp;website=www.oicqzone.com" title="添加QQ好友" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/girls/" title="喜欢的女孩子" style="color:hotpink"><span class="icon iconify" data-icon="ri:hearts-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E9%81%87"><span class="toc-number">1.</span> <span class="toc-text">相遇</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">开始搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-js"><span class="toc-number">2.1.</span> <span class="toc-text">Node.js</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-amp-GitHub"><span class="toc-number">2.2.</span> <span class="toc-text">Git &amp; GitHub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hexo"><span class="toc-number">2.3.</span> <span class="toc-text">Hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hexo-theme-yun"><span class="toc-number">2.4.</span> <span class="toc-text">hexo-theme-yun</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2"><span class="toc-number">2.5.</span> <span class="toc-text">部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2"><span class="toc-number">2.6.</span> <span class="toc-text">备份与自动部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E5%88%9B%E4%BD%9C%EF%BC%81"><span class="toc-number">2.7.</span> <span class="toc-text">开始创作！</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%99%84%E5%8A%A0%E5%8A%9F%E8%83%BD"><span class="toc-number">3.</span> <span class="toc-text">一些附加功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%BA%8A"><span class="toc-number">3.1.</span> <span class="toc-text">图床</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E8%AE%BA%E5%8C%BA"><span class="toc-number">3.2.</span> <span class="toc-text">评论区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">4.</span> <span class="toc-text">结语</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://boxie123.github.io/hexo-first-test/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="铂屑"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="铂屑的记录点"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">初识hexo<a class="post-edit-link" href="https://github.com/boxie123/boxie123.github.io/tree/hexo/source/_posts/hexo-first-test.md" target="_blank" title="编辑" rel="noopener"><span class="icon iconify" data-icon="ri:edit-line"></span></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-07-23 04:57:57" itemprop="dateCreated datePublished" datetime="2022-07-23T04:57:57+08:00">2022-07-23</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-26 16:06:42" itemprop="dateModified" datetime="2022-07-26T16:06:42+08:00">2022-07-26</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">1.4k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">5m</span></span></span><span class="leancloud_visitors" id="/hexo-first-test/" data-flag-title="初识hexo"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span class="leancloud-visitors-count"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/hexo-first-test/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E9%A1%B5%E9%9D%A2%E5%BC%80%E5%8F%91/" style="--text-color:lime" itemprop="url" rel="index"><span itemprop="text">页面开发</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E9%9A%8F%E7%AC%94/" style="--text-color:mediumpurple"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">随笔</span></a><a class="tag-item" href="/tags/hexo/" style="--text-color:sienna"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">hexo</span></a><a class="tag-item" href="/tags/%E7%AC%94%E8%AE%B0/" style="--text-color:gold"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">笔记</span></a></span></div><div class="post-author"><span class="author-name">铂屑</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>不知从何时起有了建一个属于自己的页面的想法，碍于时间与金钱成本，久久未能实现。</p>
+<h2 id="相遇"><a href="#相遇" class="headerlink" title="相遇"></a>相遇</h2><p>不久前， <em><strong>GitHub</strong></em> 的 <em><strong>For You</strong></em> 功能为我推荐了<a target="_blank" rel="noopener" href="https://github.com/YunYouJun">云游君</a>，他的文章<a target="_blank" rel="noopener" href="https://www.yunyoujun.cn/share/how-to-build-your-site/">《教你如何从零开始搭建一个属于自己的网站》</a>让我拥有一个自己网站的想法前所未有地重燃起来。</p>
+<span id="more"></span>
+
+<h2 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h2><p>值得庆幸的是，在此之前 $python、java$ 等众多语言已经教会我足够的基础，在搭建的过程中并未遇到太多波折。</p>
+<blockquote>
+<p>主要是 $git$ 以及 $cmd$ 的使用</p>
+</blockquote>
+<h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><blockquote>
+<p>从开天辟地之 <code>JavaScript</code> 说起，<code>JavaScript</code> 简写为 <code>js</code> ，是大量应用于网页构建的<strong>脚本语言</strong>，一般通过浏览器运行，语法与 <code>Java</code> 相似。<em><strong>Node.js</strong></em>是基于<strong>chrome v8</strong>引擎的<code>js</code>运行环境，为<code>js</code>运行提供了除浏览器环境之外的选择。</p>
+</blockquote>
+<p><em><strong>Node.js</strong></em> 的安装以及环境变量配置参见百度，与<code>python</code>类似，并不复杂。</p>
+<p>其后<code>cmd</code>中<code>npm</code>也类似于<code>python</code>的<code>pip</code>。</p>
+<h3 id="Git-amp-GitHub"><a href="#Git-amp-GitHub" class="headerlink" title="Git &amp; GitHub"></a>Git &amp; GitHub</h3><blockquote>
+<p>Git 是一个开源的分布式版本控制系统，由 Linus Torvalds（同时也是 Linux 的作者）为了管理 Linux 开发而开发。<br>简而言之，是一个版本管理工具。</p>
+</blockquote>
+<p>必备的基础工具，之前已安装过，不再赘述。</p>
+<h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><blockquote>
+<p>基于<em><strong>Node.js</strong></em>的博客框架，具有完善的生态，众多功能强大的插件，构建快速简洁。</p>
+</blockquote>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># -g 意为为全局安装，否则将安装到当前文件夹</span>
+<span class="token function">npm</span> <span class="token function">install</span> hexo-cli <span class="token parameter variable">-g</span>
+<span class="token comment"># 新建名为boxie123.github.io的文件夹并初始化框架</span>
+hexo init boxie123.github.io</code></pre>
+
+<p>云游君似乎正在构建另一套<a target="_blank" rel="noopener" href="https://github.com/YunYouJun/valaxy">代替 Hexo 的博客框架</a>，推荐大家去尝试一下。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 定位工作目录到上一步新建的文件夹中</span>
+<span class="token builtin class-name">cd</span> boxie123.github.io
+<span class="token comment"># 默认安装所有 `package.json` 文件中提到的包</span>
+<span class="token function">npm</span> <span class="token function">install</span>
+<span class="token comment"># 可以缩写成 hexo s，开启本地服务器</span>
+hexo server</code></pre>
+
+<p>打开浏览器，在地址栏中输入 <code>localhost:4000</code> 就可以看到本地的网页了。</p>
+<h3 id="hexo-theme-yun"><a href="#hexo-theme-yun" class="headerlink" title="hexo-theme-yun"></a>hexo-theme-yun</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">npm</span> i hexo-theme-yun</code></pre>
+
+<p>编辑<code>_config.yml</code>配置文件，新建<code>_config.yun.yml</code>用户配置文件并编辑。</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 清除缓存文件</span>
+hexo clean
+<span class="token comment"># 生成静态文件</span>
+hexo g
+<span class="token comment"># 初始化Git仓库（仅需一次）</span>
+<span class="token function">git</span> init
+<span class="token comment"># 新建并切换到hexo分支</span>
+<span class="token function">git</span> checkout <span class="token parameter variable">-b</span> hexo
+<span class="token comment"># 安装部署插件</span>
+<span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git</code></pre>
+
+<p>在正式部署前，需在<code>_config.yml</code>中编辑部署配置：</p>
+<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">deploy</span><span class="token punctuation">:</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> git
+  <span class="token key atrule">repo</span><span class="token punctuation">:</span> 你此前新建的仓库的链接 <span class="token comment"># 比如：https://github.com/YunYouJun/yunyoujun.github.io</span>
+  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master <span class="token comment"># 默认使用 master 分支</span>
+  <span class="token key atrule">message</span><span class="token punctuation">:</span> Update Hexo Static Content <span class="token comment"># 你可以自定义此次部署更新的说明</span></code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 正式部署</span>
+hexo deploy</code></pre>
+
+<blockquote>
+<p>等待完成后，打开网址 <a href="https://boxie123.github.io/">https://boxie123.github.io</a> 成功看到线上网站。</p>
+<p>但是线上网站的内容却是<code>boxie123.github.io</code>库中<code>main</code>分支的<code>ReadMe.md</code>文件，而非自动生成的<code>master</code>分支内容。</p>
+<p>打开<code>repo</code>设置，将<code>master</code>分支设置为默认分支，删除<code>main</code>分支，再次部署，打开网址，显示正常。</p>
+</blockquote>
+<h3 id="备份与自动部署"><a href="#备份与自动部署" class="headerlink" title="备份与自动部署"></a>备份与自动部署</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 与远程 Git 仓库建立连接，只此一次即可</span>
+<span class="token function">git</span> remote <span class="token function">add</span> origin https://github.com/boxie123/boxie123.github.io
+<span class="token comment"># 添加到缓存区</span>
+<span class="token function">git</span> <span class="token function">add</span> <span class="token parameter variable">-A</span>
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">"这次做了什么更改，简单描述下即可"</span>
+<span class="token comment"># 推送至远程仓库</span>
+<span class="token function">git</span> push
+<span class="token comment"># 第一次提交，你可能需设置一下默认提交分支</span>
+<span class="token comment"># git push --set-upstream origin hexo</span></code></pre>
+
+<p>编写<code>bash</code>脚本，方便之后提交。</p>
+<blockquote>
+<p>详见<a target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/blob/hexo/update.sh"><code>update.sh</code></a>文件。</p>
+</blockquote>
+<p>同理，每次部署都需要三条<code>hexo</code>命令，尝试通过<code>GitHub Action</code>完成自动部署。</p>
+<p><del>云游君提供的<code>gh-pages.yml</code>文件中使用<code>pnmp</code>进行包管理，但前述过程仅使用<code>npm</code>，且由于我较不熟悉<code>pnmp</code>使用，<br>目前本项目并未实现自动部署。</del></p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.ichr.me/post/automated-deployment-of-serverless-static-blog/#GitHub-Actions">《初探无后端静态博客自动化部署方案》</a>实现自动部署啦。</p>
+<p><span class="heimu" title="（确信）"><del>其实手动输三条命令也不太麻烦是吧</del></span></p>
+<h3 id="开始创作！"><a href="#开始创作！" class="headerlink" title="开始创作！"></a>开始创作！</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 新建文章</span>
+hexo new post xxx
+<span class="token comment"># 新建页面</span>
+hexo new page xxx</code></pre>
+
+<p>至此，页面创作之旅正式开始啦！</p>
+<h2 id="一些附加功能"><a href="#一些附加功能" class="headerlink" title="一些附加功能"></a>一些附加功能</h2><p>网页当然是在不断完善的啦！</p>
+<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>本地图片加载实在有点太慢了，而且考虑到<code>GitHub</code>抽风的可能，决定改用国内的图床。</p>
+<p>经对比，暂时使用腾讯云，初次开通<strong>对象存储（COS）</strong>服务赠送半年的50G储存以及三个月的每月5G下行流量。</p>
+<p>你问三个月之后怎么办？那就交给三个月之后的我考虑吧。</p>
+<blockquote>
+<p>所以本网站搭建到现在没花过一分钱哒。</p>
+</blockquote>
+<h3 id="评论区"><a href="#评论区" class="headerlink" title="评论区"></a>评论区</h3><p>跳转<code>GitHub Issues</code>评论毕竟不太方便，而且<strong>GFW</strong>时不时的屏蔽更是让国内大多数用户望而却步。</p>
+<blockquote>
+<p><del>所以又抄了云游君的评论区</del></p>
+</blockquote>
+<p>同样，使用<code>Waline</code>和<code>Vercel</code>搭建，参考<a target="_blank" rel="noopener" href="https://waline.js.org/guide/get-started.html"><code>Waline</code>文档</a>。</p>
+<blockquote>
+<p>文档中的<code>Deploy</code>按钮指向的链接不知为何无法选中<code>Git Scope</code>，将链接中的<code>repository-url</code>改为<code>s</code>后恢复正常。</p>
+</blockquote>
+<p><strong>注意：</strong>搭建完成后第一个注册的账号默认为管理员，请先在本地完成注册再挂载到网页。</p>
+<p>表情总是加载不出来于是直接去掉了，一起用可爱的颜文字吧！（＞人＜；）</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>再次感谢云游君所写的主题与详细教程，愿更多想拥有自己网站的小伙伴早日实现愿望。</p>
+<blockquote>
+<p>如需帮助，向我提 <a target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/issues?q=is:issue+%E5%88%9D%E8%AF%86">Issues</a> 和 <a target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/discussions/new">Discussion</a> 吧！</p>
+</blockquote>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-heart-line"></span></span><div id="reward-comment">给可爱的鸽宝一点支持吧ヾ(•ω•`)o</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://space.bilibili.com/1485569"><img loading="lazy" src="/images/aigeface.jpg" alt="关注！" title="关注！"></a><div><span style="color:darkred"><span class="icon iconify" data-icon="ri:user-add-line"></span></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://www.bilibili.com/v/pay/charge?upmid=1485569&amp;upurl=%2F%2Fspace.bilibili.com%2F1485569&amp;upname=%E8%89%BE%E9%B8%BD%E6%B3%B0%E5%B0%94%E5%BE%B7&amp;upavatar=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2Fc86cec17c8343a4b7a5f7e2d29447a9ba521a5be.jpg&amp;oid=1485569&amp;otype=up&amp;from=zone"><img loading="lazy" src="/images/aigeface2.jpg" alt="充电！" title="充电！"></a><div><span style="color:gold"><span class="icon iconify" data-icon="ri:battery-saver-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>铂屑</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://boxie123.github.io/hexo-first-test/" title="初识hexo">https://boxie123.github.io/hexo-first-test/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/air-conditioner-room/" rel="prev" title="空调房"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">空调房</span></a></div><div class="post-nav-item"></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>↓↓↓跳转issues和discussions评论，回复更及时哦↓↓↓</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/issues?q=is:issue+初识hexo">GitHub Issues</a><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/discussions/new">GitHub Discussions</a></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/hexo-first-test/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 – 2023 </span><a class="with-love" id="animate" href="/about/" title="铂屑"><span class="icon iconify" data-icon="carbon:chemistry"></span></a><span class="author"> 铂屑</span></div><div class="live-time"><span>本博客已上工</span><span id="display_live_time"></span><span class="moe-text">（；´д｀）ゞ</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-07-23T04:57:57');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","7-7"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script></body></html>
