@@ -9,4 +9,9 @@ girls:
     from: 虚拟区
     url: https://space.bilibili.com/1485569
     reason: 她就是天使！
+  - name: 小枕
+    avatar: /images/waxyface.jpg
+    from: 虚拟区
+    url: https://space.bilibili.com/1230691714
+    reason: 超可爱小抱枕！
 ---
