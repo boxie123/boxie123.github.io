@@ -3,7 +3,6 @@ title: 记一次Powershell乱码
 author: 铂屑
 date: 2025-02-16 01:04:00
 updated: 2025-02-16 01:04:00
-toc: false
 tags:
     - PowerShell
     - 分享
