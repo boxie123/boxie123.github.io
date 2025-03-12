@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Bilibili GetReceivedGiftStream</title>
+    <url>/Bilibili-GetReceivedGiftStream/</url>
+    <content><![CDATA[<p>简单记录一下 Python 项目 <a href="https://github.com/boxie123/Bilibili_GetReceivedGiftStream">Bilibili_GetReceivedGiftStream</a> 的开发思路。</p>
+<p>某天听到<a href="https://space.bilibili.com/1485569/">鸽宝</a>说b站查询礼物记录的功能相当反人类，需要一天一天找。</p>
+<p>我心想：<em>这不简单，直接全都爬下来。</em></p>
+<p>于是诞生了此项目。</p>
+<span id="more"></span>
+
+<h2 id="login-py"><a href="#login-py" class="headerlink" title="login.py"></a>login.py</h2><p>首先，肯定要登录b站账号。</p>
+<p>本模块主要功能是获取登录二维码，扫码登陆后记录<code>cookies</code>，并在每次运行时判断<code>cookies</code>是否有效。</p>
+<p>那么问题来了：</p>
+<h3 id="什么是-Cookies-？"><a href="#什么是-Cookies-？" class="headerlink" title="什么是 Cookies ？"></a>什么是 Cookies ？</h3><blockquote>
+<p>Cookie，有时也用其复数形式 Cookies。类型为“小型文本文件”，是某些网站为了辨别用户身份，进行Session跟踪而储存在用户本地终端上的数据（通常经过加密），由用户客户端计算机暂时或永久保存的信息。（摘自百度百科）</p>
+</blockquote>
+<p>简单理解，<code>cookies</code>就是包含在你发送给服务器的请求数据中的一小段文本，用于识别你的身份。比如 bilibili 的<code>cookies</code>包含的是账号登陆信息。</p>
+<h3 id="如何获取-Cookies-？"><a href="#如何获取-Cookies-？" class="headerlink" title="如何获取 Cookies ？"></a>如何获取 Cookies ？</h3><blockquote>
+<p>当用户试图访问某Web站点中需要认证的资源时，Web服务器会检查用户是否提供了认证Cookie，如果没有，则将用户重定向到登录页面。在用户成功登录后，Web服务器会产生认证Cookie，并通过HTTP响应中的Set-Cookie头发送给客户端，用于对用户随后的请求进行检查和验证，接着将用户重定向到初始请求的资源</p>
+</blockquote>
+<p>通过扫码、账号密码、验证码……等方法登录账号后，服务器会产生唯一的一串<code>cookies</code>文本，并返回到你的计算机储存起来。下次再访问此网页的时候，发送给服务器的请求就会带上储存的<code>cookies</code>，服务器经过比对可识别已登录。</p>
+<p>而在已经登陆过的浏览器上，打开开发者工具，同样可以看到本网页对应的<code>cookies</code>：</p>
+<p><img src="/images/post/cookies-example.png" alt="cookies-example" loading="lazy"></p>
+<p>让用户自己去网页复制<code>cookies</code>虽然可行，<del>但会显得我技术不行！</del> </p>
+<p>更优雅的方式应是通过模拟登录自动获取<code>cookies</code>。</p>
+<h3 id="模拟登录"><a href="#模拟登录" class="headerlink" title="模拟登录"></a>模拟登录</h3><p>本文件采用模拟扫码登陆，获取返回的<code>cookies</code>值。</p>
+<p>首先来到 bilibili 的<a href="https://passport.bilibili.com/login">登陆页面</a>，通过开发者工具的网络日志，可以看到，首先向网址<code>https://passport.bilibili.com/qrcode/getLoginUrl</code>发送了 GET 请求，返回了<code>oauthKey</code>和<code>url</code>等数据，其中<code>oauthKey</code>就是此二维码的<strong>验证密钥</strong>，我们暂时储存下来。</p>
+<p>但是在网络日志中并未找到二维码获取的网址，查找源代码，可看到以下代码：</p>
+<pre class="language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function-variable function">getQrcode</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">var</span> e <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+                    $<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+                        <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"https://passport.bilibili.com/qrcode/getLoginUrl"</span><span class="token punctuation">,</span>
+                        <span class="token literal-property property">dataType</span><span class="token operator">:</span> <span class="token string">"json"</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">t</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>t<span class="token punctuation">.</span>status<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                            e<span class="token punctuation">.</span>refer <span class="token operator">?</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>refer<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>refer<span class="token punctuation">.</span><span class="token function">makeCode</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">:</span> e<span class="token punctuation">.</span><span class="token function">$nextTick</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                e<span class="token punctuation">.</span>refer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">QRCode</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>$refs<span class="token punctuation">.</span>qrcode<span class="token punctuation">,</span><span class="token punctuation">&#123;</span>
+                                    <span class="token literal-property property">text</span><span class="token operator">:</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">,</span>
+                                    <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">140</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">140</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>key <span class="token operator">=</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>oauthKey<span class="token punctuation">;</span>
+                            <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token function">decodeURIComponent</span><span class="token punctuation">(</span><span class="token function">Object</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>h<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token string">"gourl"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token function">clearTimeout</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>cd<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>cd <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>expire<span class="token punctuation">,</span> e<span class="token punctuation">.</span>cdTime<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            <span class="token function">clearInterval</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>loop<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>loop <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                $<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+                                    <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"https://passport.bilibili.com/qrcode/getLoginInfo"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">dataType</span><span class="token operator">:</span> <span class="token string">"json"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"POST"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                                        <span class="token literal-property property">oauthKey</span><span class="token operator">:</span> e<span class="token punctuation">.</span>key<span class="token punctuation">,</span>
+                                        <span class="token literal-property property">gourl</span><span class="token operator">:</span> i <span class="token operator">||</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>referrer <span class="token operator">||</span> <span class="token string">""</span><span class="token punctuation">)</span>
+                                    <span class="token punctuation">&#125;</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">t</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                    t<span class="token punctuation">.</span>status <span class="token operator">?</span> <span class="token punctuation">(</span>reportMsgObj<span class="token punctuation">.</span>qrcodescan_login <span class="token operator">=</span> <span class="token string">"success"</span><span class="token punctuation">,</span>
+                                    window<span class="token punctuation">.</span>reportObserver <span class="token operator">&amp;&amp;</span> window<span class="token punctuation">.</span>reportObserver<span class="token punctuation">.</span>forceCommit <span class="token operator">&amp;&amp;</span> window<span class="token punctuation">.</span>reportObserver<span class="token punctuation">.</span><span class="token function">forceCommit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                    window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>href <span class="token operator">=</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">)</span> <span class="token operator">:</span> t<span class="token punctuation">.</span>status <span class="token operator">||</span> <span class="token operator">-</span><span class="token number">2</span> <span class="token operator">!=</span> t<span class="token punctuation">.</span>message <span class="token operator">?</span> t<span class="token punctuation">.</span>status <span class="token operator">||</span> <span class="token operator">-</span><span class="token number">5</span> <span class="token operator">!=</span> t<span class="token punctuation">.</span>data <span class="token operator">||</span> e<span class="token punctuation">.</span><span class="token function">scanSucess</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> e<span class="token punctuation">.</span><span class="token function">expire</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>loopTime<span class="token punctuation">)</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                <span class="token punctuation">&#125;</span><span class="token punctuation">,</span></code></pre>
+
+<p>可看到是再次向刚刚得到的<code>url</code>发送 GET 请求，得到二维码对应的链接，并通过 js 直接生成 Base64 发送到前端。</p>
+<p>转化为 Python 代码即为引入<code>qrcode</code>库将链接转为二维码。</p>
+<blockquote>
+<p>使用<code>showpng</code>类新建线程，可不存储到本地，直接显示二维码图片。</p>
+</blockquote>
+<p>同样，通过网络日志可以看到，每两秒浏览器就会向<code>https://passport.bilibili.com/qrcode/getLoginInfo</code>发送 POST 请求来确定登陆状态，其中：</p>
+<blockquote>
+<p>‘data’: -4：二维码未失效</p>
+<p>‘data’: -5：已扫码</p>
+<p>‘data’: -2：二维码已失效</p>
+<p>‘status’: True：已登录</p>
+</blockquote>
+<p>构建<code>while True</code>循环，并在每次循环后等待两秒。</p>
+<p>访问登陆成功后返回的带参数的<code>url</code>，获取<code>cookies</code>值并存储。</p>
+<h3 id="验证登陆状态"><a href="#验证登陆状态" class="headerlink" title="验证登陆状态"></a>验证登陆状态</h3><p>同样，向<code>https://api.bilibili.com/x/web-interface/nav</code>发送 GET 请求，通过返回数据判断：</p>
+<blockquote>
+<p>‘code’: -101 即为未登录；</p>
+<p>‘code’: 0 即为已登录。</p>
+</blockquote>
+<h3 id="Cookies-的储存与读取"><a href="#Cookies-的储存与读取" class="headerlink" title="Cookies 的储存与读取"></a>Cookies 的储存与读取</h3><p>因 requests 库的官网已无法访问（详见<a href="https://www.163.com/dy/article/H8QB97VK0511CUMI.html">此文</a>），此处仅大致介绍 CookieJar 相关用法，并建议读者尽量转用<code>httpx</code>或<code>aiohttp</code>等代替。</p>
+<p>其中<code>httpx</code>在几乎完美代替<code>requests</code>的基础上支持了异步操作。</p>
+<p>什么是 CookieJar 呢？</p>
+<blockquote>
+<p>CookieJar 是 requests 定义的类，requests 只能保持 cookiejar 类型的 cookie ，而我们手动构建的 cookie 是 dict 类型的。所以要把 dict 转为 cookiejar 类型。</p>
+</blockquote>
+<p>其中又包含四种子类：</p>
+<ul>
+<li><code>CookieJar</code>：管理HTTP cookie值、存储HTTP请求生成的cookie、向传出的HTTP请求添加cookie的对象。整个cookie都存储在内存中，对CookieJar实例进行垃圾回收后cookie也将丢失。</li>
+<li><code>FileCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从CookieJar派生而来，用来创建FileCookieJar实例，检索cookie信息并将cookie存储到文件中。filename是存储cookie的文件名。delayload为True时支持延迟访问访问文件，即只有在需要时才读取文件或在文件中存储数据。</li>
+<li><code>MozillaCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从FileCookieJar派生而来，创建与Mozilla浏览器 cookies.txt兼容的FileCookieJar实例。</li>
+<li><code>LWPCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从FileCookieJar派生而来，创建与libwww-perl标准的 Set-Cookie3 文件格式兼容的FileCookieJar实例。</li>
+</ul>
+<blockquote>
+<p>一般来说我们仅会用到后两种。</p>
+</blockquote>
+<p>此处采用<code>LWPCookieJar</code>保存获得的 Cookies 。首先导入 cookiejar 类：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> http<span class="token punctuation">.</span>cookiejar <span class="token keyword">as</span> cookielib</code></pre>
+
+<p>创建 session 链接并从文件读取 cookies：</p>
+<pre class="language-python" data-language="python"><code class="language-python">session <span class="token operator">=</span> requests<span class="token punctuation">.</span>session<span class="token punctuation">(</span><span class="token punctuation">)</span>
+session<span class="token punctuation">.</span>cookies <span class="token operator">=</span> cookielib<span class="token punctuation">.</span>LWPCookieJar<span class="token punctuation">(</span>filename<span class="token operator">=</span>filename<span class="token punctuation">)</span></code></pre>
+
+<p>最后，获取到 cookies 后，通过<code>session.cookies.save()</code>保存到本地，下次直接读取。</p>
+<h2 id="getGift-py"><a href="#getGift-py" class="headerlink" title="getGift.py"></a>getGift.py</h2><p>因爬取礼物流水数据可能需要多次发送请求，本模块采用异步操作提高效率，引入<code>aiohttp</code>库。</p>
+<blockquote>
+<p>咕咕咕 什么时候有时间再继续写</p>
+</blockquote>
+<h2 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h2><h2 id="agent-py"><a href="#agent-py" class="headerlink" title="agent.py"></a>agent.py</h2>]]></content>
+      <categories>
+        <category>后端编程</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>分享</tag>
+        <tag>文档</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>提取 QQ 语音消息文件的方法</title>
+    <url>/Extract-QQ-voice/</url>
+    <content><![CDATA[<p>记录并尝试教会群友怎么提取 QQ 语音消息到 mp3 文件，不再录屏全损音质</p>
+<span id="more"></span>
+
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><blockquote>
+<p>如果你对原理不感兴趣，仅想赶快获取方法，请转到<a href="#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">快速使用</a></p>
+</blockquote>
+<p>QQ 和 VX 的语音消息都采用<code>.amr</code>格式封装，这种音频使用<code>silk-v3</code>编码，<code>silk-v3</code>编码是 Skype 向第三方开发人员和硬件制造商提供免版税认证(RF)的 Silk 宽带音频编码器，Skype 后来将其开源。具体可见<a href="https://zh.wikipedia.org/wiki/SILK">Wikipedia</a>。</p>
+<p>这种编码类型在其他地方很少见，所以绝大部分播放器无法直接播放。为了方便，可以将它转为<code>.mp3</code>格式，<del>然后收藏枕宝语音偷偷听</del>。</p>
+<p>幸运的是，已经有大佬找齐了源码，并制作了批量转化脚本，开源到了Github项目：<a href="https://github.com/kn007/silk-v3-decoder">silk-v3-decoder</a>。</p>
+<h2 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h2><p>首先，需要找到语音消息对应的<code>.amr</code>文件所在位置。</p>
+<p>由于 QQ 和 VX 版本繁多，且各个版本默认存储位置不同，还能自定义更改，在这里更推荐使用<a href="https://www.voidtools.com/zh-cn/">Everything</a>查找<code>.amr</code>文件位置：</p>
+<p><img src="/images/post/everything-example.png" alt="everything-example" loading="lazy"></p>
+<p>根据文件创建日期排序，可以轻松找到特定语音消息对应的文件，将其复制出来，到一个方便找到的位置。</p>
+<p>然后，我们下载前面所说的项目<a href="https://github.com/kn007/silk-v3-decoder">silk-v3-decoder</a>。可以使用<code>git clone</code>或直接<a href="https://github.com/kn007/silk-v3-decoder/archive/refs/heads/master.zip">点击此处下载</a>并解压。</p>
+<p>如果你是Linux系统，想必可以根据Readme使用，不必再在此赘述。如果你是Windows系统，打开上述解压后的文件目录中<code>silk-v3-decoder-master\windows</code>路径，双击<code>silk2mp3.exe</code>运行。（此处windows系统自带的杀毒软件可能报毒，如果不放心可以自行删除）</p>
+<p><img src="/images/post/silk-example.png" alt="silk-example" loading="lazy"></p>
+<p>界面十分简单易用，也不再详细介绍。</p>
+]]></content>
+      <categories>
+        <category>小玩具</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>空调房</title>
+    <url>/air-conditioner-room/</url>
+    <content><![CDATA[<blockquote>
+<p>天气太热啦，从云游君那里借了空调过来！</p>
+<p>一起躺在空调房过夏天吧！</p>
+</blockquote>
+<span id="more"></span>
+
+<iframe height="800" src="https://ac.yunyoujun.cn"></iframe>
+
+<br>
+
+<br>
+]]></content>
+      <categories>
+        <category>小玩具</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+        <tag>云游君</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Anaconda完全卸载与Poetry安装</title>
+    <url>/conda-or-poetry/</url>
+    <content><![CDATA[<blockquote>
+<p>先说结论，选择 <code>poetry</code></p>
+</blockquote>
+<p>另：鉴于 <code>conda</code> 与 <code>poetry</code> 混合使用会造成一系列不可知隐患，暂不考虑。</p>
+<p>在使用 <code>conda</code> 一段时间后，愈发觉得它的臃肿与低效，尤其在包管理方面的弱势。<br>且我并没有切换 <code>python</code> 版本的刚需，决定改用 <code>poetry</code>。</p>
+<span id="more"></span>
+
+<p>首先，卸载 <code>conda</code>（x）</p>
+<h2 id="卸载-anaconda"><a href="#卸载-anaconda" class="headerlink" title="卸载 anaconda"></a>卸载 anaconda</h2><p>使用软件自带的<code>uninstall.exe</code>肯定是卸载不干净的，之后手动删除又苦于找不到所有配置文件位置，<br>会对下次安装或者其他 <code>python</code> 环境造成影响。</p>
+<p>参考 <a href="https://docs.anaconda.com/anaconda/install/uninstall/">anaconda官网的卸载流程</a>，<br>进行完全卸载：</p>
+<ol>
+<li><p>首先，打开 <code>anaconda</code> 的命令行工具<code>Anaconda Prompt</code>（可在菜单栏找到）。</p>
+</li>
+<li><p>安装 <code>anaconda-clean</code> 包</p>
+ <pre class="language-bash" data-language="bash"><code class="language-bash">conda <span class="token function">install</span> anaconda-clean</code></pre>
+</li>
+<li><p>运行 <code>anaconda-clean</code></p>
+ <pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># If you want to confirm each file and directory you are deleting</span>
+anaconda-clean
+
+<span class="token comment"># If you don't want to be asked about each file and directory</span>
+anaconda-clean <span class="token parameter variable">--yes</span></code></pre>
+</li>
+<li><p><code>anaconda-clean</code>这个命令可能会将 <code>Anaconda</code> 的配置文件等都移动到备份文件夹里面，备份文件夹的位置在<code>C:\Users\用户名.anaconda_backup</code>。<strong>可直接删除</strong>。</p>
+</li>
+<li><p>打开 <code>Anaconda</code> 安装目录，删除用户文件夹中的环境<code>anaconda3\envs</code> 和包 <code>anaconda3\pkgs</code> 文件夹。（数G大小）</p>
+<blockquote>
+<p>记得及时清空回收站鸭</p>
+</blockquote>
+</li>
+<li><p>打开添加或删除程序并卸载 <code>Anaconda</code> 安装或 <code>Python</code> 版本。</p>
+<blockquote>
+<p>打开<kbd>Ctrl</kbd> + <kbd>R</kbd>，输入<code>appwiz.cpl</code>快速打开</p>
+</blockquote>
+</li>
+<li><p>检查环境变量中是否有残留。</p>
+<blockquote>
+<p>打开<kbd>Ctrl</kbd> + <kbd>R</kbd>，输入<code>sysdm.cpl</code>快速打开</p>
+</blockquote>
+<p> <span class="heimu" title="（确信）"><del>其实不清理也没什么影响。</del></span></p>
+</li>
+</ol>
+<p>至此， <code>Anaconda</code> 完全卸载完成！你的计算机又回到安装它之前的状态啦！</p>
+<h2 id="Poetry-安装"><a href="#Poetry-安装" class="headerlink" title="Poetry 安装"></a>Poetry 安装</h2><blockquote>
+<p>在此仅介绍 <em><strong>Windows</strong></em> 安装，更多信息详见 <a href="https://python-poetry.org/docs/">官方文档</a></p>
+</blockquote>
+<p>在powershell中输入：</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">(</span>Invoke-WebRequest <span class="token parameter variable">-Uri</span> https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing<span class="token punctuation">)</span>.Content <span class="token operator">|</span> python -</code></pre>
+<p>因为<code>raw.githubusercontent.com</code>域名被墙，此方法需要科学上网。</p>
+<p>此命令将自动添加环境变量，若想手动添加，可在安装时添加命令<code>--no-modify-path</code>。</p>
+<blockquote>
+<p>可以看到用户变量的<code>Path</code>中添加了一条<code>C:\Users\用户名\.poetry\bin</code></p>
+</blockquote>
+<p>最后，打开一个新的<code>shell</code>或<code>cmd</code>，输入</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">poetry <span class="token parameter variable">--version</span></code></pre>
+
+<p>若能看到<code>poetry</code>版本号则已安装成功。</p>
+]]></content>
+      <categories>
+        <category>后端编程</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>分享</tag>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo server</code></pre>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo generate</code></pre>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo deploy</code></pre>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>页面开发</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初识hexo</title>
+    <url>/hexo-first-test/</url>
+    <content><![CDATA[<p>不知从何时起有了建一个属于自己的页面的想法，碍于时间与金钱成本，久久未能实现。</p>
+<h2 id="相遇"><a href="#相遇" class="headerlink" title="相遇"></a>相遇</h2><p>不久前， <em><strong>GitHub</strong></em> 的 <em><strong>For You</strong></em> 功能为我推荐了<a href="https://github.com/YunYouJun">云游君</a>，他的文章<a href="https://www.yunyoujun.cn/share/how-to-build-your-site/">《教你如何从零开始搭建一个属于自己的网站》</a>让我拥有一个自己网站的想法前所未有地重燃起来。</p>
+<span id="more"></span>
+
+<h2 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h2><p>值得庆幸的是，在此之前 $python、java$ 等众多语言已经教会我足够的基础，在搭建的过程中并未遇到太多波折。</p>
+<blockquote>
+<p>主要是 $git$ 以及 $cmd$ 的使用</p>
+</blockquote>
+<h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><blockquote>
+<p>从开天辟地之 <code>JavaScript</code> 说起，<code>JavaScript</code> 简写为 <code>js</code> ，是大量应用于网页构建的<strong>脚本语言</strong>，一般通过浏览器运行，语法与 <code>Java</code> 相似。<em><strong>Node.js</strong></em>是基于<strong>chrome v8</strong>引擎的<code>js</code>运行环境，为<code>js</code>运行提供了除浏览器环境之外的选择。</p>
+</blockquote>
+<p><em><strong>Node.js</strong></em> 的安装以及环境变量配置参见百度，与<code>python</code>类似，并不复杂。</p>
+<p>其后<code>cmd</code>中<code>npm</code>也类似于<code>python</code>的<code>pip</code>。</p>
+<h3 id="Git-amp-GitHub"><a href="#Git-amp-GitHub" class="headerlink" title="Git &amp; GitHub"></a>Git &amp; GitHub</h3><blockquote>
+<p>Git 是一个开源的分布式版本控制系统，由 Linus Torvalds（同时也是 Linux 的作者）为了管理 Linux 开发而开发。<br>简而言之，是一个版本管理工具。</p>
+</blockquote>
+<p>必备的基础工具，之前已安装过，不再赘述。</p>
+<h3 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h3><blockquote>
+<p>基于<em><strong>Node.js</strong></em>的博客框架，具有完善的生态，众多功能强大的插件，构建快速简洁。</p>
+</blockquote>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># -g 意为为全局安装，否则将安装到当前文件夹</span>
+<span class="token function">npm</span> <span class="token function">install</span> hexo-cli <span class="token parameter variable">-g</span>
+<span class="token comment"># 新建名为boxie123.github.io的文件夹并初始化框架</span>
+hexo init boxie123.github.io</code></pre>
+
+<p>云游君似乎正在构建另一套<a href="https://github.com/YunYouJun/valaxy">代替 Hexo 的博客框架</a>，推荐大家去尝试一下。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 定位工作目录到上一步新建的文件夹中</span>
+<span class="token builtin class-name">cd</span> boxie123.github.io
+<span class="token comment"># 默认安装所有 `package.json` 文件中提到的包</span>
+<span class="token function">npm</span> <span class="token function">install</span>
+<span class="token comment"># 可以缩写成 hexo s，开启本地服务器</span>
+hexo server</code></pre>
+
+<p>打开浏览器，在地址栏中输入 <code>localhost:4000</code> 就可以看到本地的网页了。</p>
+<h3 id="hexo-theme-yun"><a href="#hexo-theme-yun" class="headerlink" title="hexo-theme-yun"></a>hexo-theme-yun</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">npm</span> i hexo-theme-yun</code></pre>
+
+<p>编辑<code>_config.yml</code>配置文件，新建<code>_config.yun.yml</code>用户配置文件并编辑。</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 清除缓存文件</span>
+hexo clean
+<span class="token comment"># 生成静态文件</span>
+hexo g
+<span class="token comment"># 初始化Git仓库（仅需一次）</span>
+<span class="token function">git</span> init
+<span class="token comment"># 新建并切换到hexo分支</span>
+<span class="token function">git</span> checkout <span class="token parameter variable">-b</span> hexo
+<span class="token comment"># 安装部署插件</span>
+<span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git</code></pre>
+
+<p>在正式部署前，需在<code>_config.yml</code>中编辑部署配置：</p>
+<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">deploy</span><span class="token punctuation">:</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> git
+  <span class="token key atrule">repo</span><span class="token punctuation">:</span> 你此前新建的仓库的链接 <span class="token comment"># 比如：https://github.com/YunYouJun/yunyoujun.github.io</span>
+  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master <span class="token comment"># 默认使用 master 分支</span>
+  <span class="token key atrule">message</span><span class="token punctuation">:</span> Update Hexo Static Content <span class="token comment"># 你可以自定义此次部署更新的说明</span></code></pre>
+
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 正式部署</span>
+hexo deploy</code></pre>
+
+<blockquote>
+<p>等待完成后，打开网址 <a href="https://boxie123.github.io/">https://boxie123.github.io</a> 成功看到线上网站。</p>
+<p>但是线上网站的内容却是<code>boxie123.github.io</code>库中<code>main</code>分支的<code>ReadMe.md</code>文件，而非自动生成的<code>master</code>分支内容。</p>
+<p>打开<code>repo</code>设置，将<code>master</code>分支设置为默认分支，删除<code>main</code>分支，再次部署，打开网址，显示正常。</p>
+</blockquote>
+<h3 id="备份与自动部署"><a href="#备份与自动部署" class="headerlink" title="备份与自动部署"></a>备份与自动部署</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 与远程 Git 仓库建立连接，只此一次即可</span>
+<span class="token function">git</span> remote <span class="token function">add</span> origin https://github.com/boxie123/boxie123.github.io
+<span class="token comment"># 添加到缓存区</span>
+<span class="token function">git</span> <span class="token function">add</span> <span class="token parameter variable">-A</span>
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">"这次做了什么更改，简单描述下即可"</span>
+<span class="token comment"># 推送至远程仓库</span>
+<span class="token function">git</span> push
+<span class="token comment"># 第一次提交，你可能需设置一下默认提交分支</span>
+<span class="token comment"># git push --set-upstream origin hexo</span></code></pre>
+
+<p>编写<code>bash</code>脚本，方便之后提交。</p>
+<blockquote>
+<p>详见<a href="https://github.com/boxie123/boxie123.github.io/blob/hexo/update.sh"><code>update.sh</code></a>文件。</p>
+</blockquote>
+<p>同理，每次部署都需要三条<code>hexo</code>命令，尝试通过<code>GitHub Action</code>完成自动部署。</p>
+<p><del>云游君提供的<code>gh-pages.yml</code>文件中使用<code>pnmp</code>进行包管理，但前述过程仅使用<code>npm</code>，且由于我较不熟悉<code>pnmp</code>使用，<br>目前本项目并未实现自动部署。</del></p>
+<p>参考<a href="https://blog.ichr.me/post/automated-deployment-of-serverless-static-blog/#GitHub-Actions">《初探无后端静态博客自动化部署方案》</a>实现自动部署啦。</p>
+<p><span class="heimu" title="（确信）"><del>其实手动输三条命令也不太麻烦是吧</del></span></p>
+<h3 id="开始创作！"><a href="#开始创作！" class="headerlink" title="开始创作！"></a>开始创作！</h3><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 新建文章</span>
+hexo new post xxx
+<span class="token comment"># 新建页面</span>
+hexo new page xxx</code></pre>
+
+<p>至此，页面创作之旅正式开始啦！</p>
+<h2 id="一些附加功能"><a href="#一些附加功能" class="headerlink" title="一些附加功能"></a>一些附加功能</h2><p>网页当然是在不断完善的啦！</p>
+<h3 id="图床"><a href="#图床" class="headerlink" title="图床"></a>图床</h3><p>本地图片加载实在有点太慢了，而且考虑到<code>GitHub</code>抽风的可能，决定改用国内的图床。</p>
+<p>经对比，暂时使用腾讯云，初次开通<strong>对象存储（COS）</strong>服务赠送半年的50G储存以及三个月的每月5G下行流量。</p>
+<p>你问三个月之后怎么办？那就交给三个月之后的我考虑吧。</p>
+<blockquote>
+<p>所以本网站搭建到现在没花过一分钱哒。</p>
+</blockquote>
+<h3 id="评论区"><a href="#评论区" class="headerlink" title="评论区"></a>评论区</h3><p>跳转<code>GitHub Issues</code>评论毕竟不太方便，而且<strong>GFW</strong>时不时的屏蔽更是让国内大多数用户望而却步。</p>
+<blockquote>
+<p><del>所以又抄了云游君的评论区</del></p>
+</blockquote>
+<p>同样，使用<code>Waline</code>和<code>Vercel</code>搭建，参考<a href="https://waline.js.org/guide/get-started.html"><code>Waline</code>文档</a>。</p>
+<blockquote>
+<p>文档中的<code>Deploy</code>按钮指向的链接不知为何无法选中<code>Git Scope</code>，将链接中的<code>repository-url</code>改为<code>s</code>后恢复正常。</p>
+</blockquote>
+<p><strong>注意：</strong>搭建完成后第一个注册的账号默认为管理员，请先在本地完成注册再挂载到网页。</p>
+<p>表情总是加载不出来于是直接去掉了，一起用可爱的颜文字吧！（＞人＜；）</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>再次感谢云游君所写的主题与详细教程，愿更多想拥有自己网站的小伙伴早日实现愿望。</p>
+<blockquote>
+<p>如需帮助，向我提 <a href="https://github.com/boxie123/boxie123.github.io/issues?q=is:issue+%E5%88%9D%E8%AF%86">Issues</a> 和 <a href="https://github.com/boxie123/boxie123.github.io/discussions/new">Discussion</a> 吧！</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>页面开发</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>随笔</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>物化学习笔记</title>
+    <url>/physical-chemistry/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>化学学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>化学</tag>
+        <tag>物化</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>物化学习笔记1——量子力学基础</title>
+    <url>/physical-chemistry-1-Fundamentals-of-Quantum-Mechanics/</url>
+    <content><![CDATA[<p>微观世界与宏观有截然不同的运动方式，人们以量子力学来解释微观世界的各种现象。</p>
+<span id="more"></span>
+
+<h2 id="三朵乌云"><a href="#三朵乌云" class="headerlink" title="三朵乌云"></a>三朵乌云</h2><p>黑体辐射、光电子效应、氢原子光谱三朵乌云使经典力学的大厦摇摇欲坠，量子力学因此诞生。</p>
+<p>为解释黑体辐射，波尔提出了能量量子化：</p>
+<p>$$<br>\epsilon &#x3D; h\nu<br>$$</p>
+]]></content>
+      <categories>
+        <category>化学学习</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>化学</tag>
+        <tag>物化</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记一次Powershell乱码</title>
+    <url>/ps1-echo-messy-code/</url>
+    <content><![CDATA[<p>今天尝试编写一个简单PowerShell脚本时，发现echo出的中文内容显示乱码，一番查找资料才得到解决，遂记录在这里。</p>
+<span id="more"></span>
+
+<blockquote>
+<p>省流：将文件编码改为<code>UTF-8-BOM</code></p>
+</blockquote>
+<h3 id="原因说明"><a href="#原因说明" class="headerlink" title="原因说明"></a>原因说明</h3><blockquote>
+<p>如果需要在脚本中使用非 Ascii 字符，请将它们保存为带有 BOM 的 UTF-8 文件。 如果没有 BOM，Windows PowerShell 会将脚本误解为是在旧的“ANSI”代码页中编码的。 </p>
+<p>相反，具有 UTF-8 BOM 的文件在类 Unix 平台上可能会出现问题。 许多 Unix 工具（如 cat、sed、awk）以及一些编辑器（如 gedit）不知道如何处理 BOM。       ——<a href="https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_character_encoding?view=powershell-7.5&viewFallbackFrom=powershell-7.2">PowerShell参考文档</a></p>
+</blockquote>
+<p>即：Windows默认使用BOM来区分Unicode和非Unicode编码，对非Unicode就会使用程序指定的ANSI编码页来解读，而Unicode则会使用另一套称为宽字符的方法。</p>
+<p>此历史遗留问题在 PowerShell 6.0 以上的版本中已得到修正，但截至目前（Windows 11 26100.3194），系统自带的 PowerShell 仍然只是 5.1 版本，因此更新PS版本也可以解决此问题。</p>
+<h3 id="错误方法"><a href="#错误方法" class="headerlink" title="错误方法"></a>错误方法</h3><p>我开始时编写的.ps1文件内容十分简单，仅用于快速启动一些程序：</p>
+<pre class="language-powershell" data-language="powershell"><code class="language-powershell"><span class="token comment"># 桌面路径</span>
+<span class="token variable">$desktopPath</span> = <span class="token string">"<span class="token variable">$env</span>:USERPROFILE\Desktop"</span>
+<span class="token comment"># 需要启动的应用程序路径</span>
+<span class="token variable">$apps</span> = @<span class="token punctuation">(</span>
+    <span class="token string">"Internet\QQ.lnk"</span><span class="token punctuation">,</span>
+    <span class="token string">"Internet\微信.lnk"</span><span class="token punctuation">,</span>
+    <span class="token string">"Internet\Google Chrome.lnk"</span>
+<span class="token punctuation">)</span>  
+
+<span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$app</span> in <span class="token variable">$apps</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+		    <span class="token function">echo</span> <span class="token string">"正在启动：<span class="token variable">$desktopPath</span>\<span class="token variable">$app</span>"</span>
+        <span class="token function">Start-Process</span> <span class="token string">"<span class="token variable">$desktopPath</span>\<span class="token variable">$app</span>"</span> <span class="token operator">-</span>ErrorAction Stop
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">Write-Warning</span> <span class="token string">"无法启动应用程序：<span class="token variable">$_</span>"</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+pause</code></pre>
+<p>但此时其中中文出现乱码。</p>
+<p>我自然认为是编码页不同导致的，于是在文件开头添加了如下两行：</p>
+<pre class="language-powershell" data-language="powershell"><code class="language-powershell">chcp 65001
+<span class="token namespace">[Console]</span>::OutputEncoding = <span class="token namespace">[System.Text.Encoding]</span>::UTF8</code></pre>
+
+<p>问题未能得到解决。</p>
+<p>后在中文互联网搜索，结果基本都是更改编码页，而且大量同一篇文章的复制粘贴。</p>
+<p>后找到一篇大佬的<a href="https://www.curious.host/posts/4/">博客</a>才得以解决，博客文末附有介绍字符编码和Windows这部分处理的历史包袱的文章链接，感兴趣可以点进去看一下。</p>
+]]></content>
+      <categories>
+        <category>后端编程</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+        <tag>笔记</tag>
+        <tag>PowerShell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从 Requests 转向 Httpx</title>
+    <url>/requests-to-httpx/</url>
+    <content><![CDATA[<p>在上一个项目（<a href="https://boxie123.github.io/Bilibili-GetReceivedGiftStream/">《Bilibili GetReceivedGiftStream》</a>）中，登陆部分使用单线程的 Requests ，爬取数据部分采用异步的 Aiohttp ，今日有时间删掉这两个，改成既能同步又能异步的 <strong>Httpx</strong> ，在此记录一下需要修改的部分。</p>
+<p>主要是 Requests 与 Httpx 的 Cookies 部分。</p>
+<span id="more"></span>
+
+<h2 id="Client-与-Session"><a href="#Client-与-Session" class="headerlink" title="Client 与 Session"></a>Client 与 Session</h2><p>在官方文档中写道，<code>Client</code>可代替<code>Session</code>：</p>
+<blockquote>
+<p>If you are coming from Requests, <code>httpx.Client()</code> is what you can use instead of <code>requests.Session()</code>.</p>
+</blockquote>
+<p>但同时他们也有一些区别（详见官方文档 <a href="https://www.python-httpx.org/compatibility/">兼容性</a> 一节）</p>
+<blockquote>
+<p>We prefer enforcing a stricter API here because it provides clearer expectations around cookie persistence, particularly when redirects occur.</p>
+</blockquote>
+<p>这使得一些参数仅可在 <code>Client</code> 中设置，而不可基于每个请求单独设置，例如：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token comment"># 这样是允许的</span>
+client <span class="token operator">=</span> httpx<span class="token punctuation">.</span>Client<span class="token punctuation">(</span>cookies<span class="token operator">=</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
+client<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></code></pre>
+
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token comment"># 这样是禁止的</span>
+client <span class="token operator">=</span> httpx<span class="token punctuation">.</span>Client<span class="token punctuation">(</span><span class="token punctuation">)</span>
+client<span class="token punctuation">.</span>post<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> cookies<span class="token operator">=</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></code></pre>
+
+<p>同理，像<code>verify</code>等参数仅可在<code>Client</code>中设置。</p>
+<h2 id="Cookie-和-Cookie-jar"><a href="#Cookie-和-Cookie-jar" class="headerlink" title="Cookie 和 Cookie.jar"></a>Cookie 和 Cookie.jar</h2><p>首先，我们先看<code>http.cookiejar</code>都有哪些特征：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> http<span class="token punctuation">.</span>cookiejar <span class="token keyword">as</span> cookielib
+
+cookies <span class="token operator">=</span> cookielib<span class="token punctuation">.</span>LWPCookieJar<span class="token punctuation">(</span><span class="token string">"bzcookies.txt"</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+<p>输出：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">&lt;</span>LWPCookieJar<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'http.cookiejar.LWPCookieJar'</span><span class="token operator">></span></code></pre>
+
+<p>可以看到，此时cookiejar中内容为空，我们需要通过<code>load</code>方法加载 Cookie 的值：</p>
+<pre class="language-python" data-language="python"><code class="language-python">cookies<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+<p>输出中包含 Cookie 值内容。此时，我们可以用<code>cookies.save()</code>来将 Cookies 值保存到文件<code>bzcookies.txt</code>中。</p>
+<p>当使用 Requests 时，新建<code>session</code>后，将<code>LWPCookieJar</code>赋值给<code>session</code>的<code>cookies</code>属性：</p>
+<pre class="language-python" data-language="python"><code class="language-python">cookies <span class="token operator">=</span> cookielib<span class="token punctuation">.</span>LWPCookieJar<span class="token punctuation">(</span><span class="token string">"bzcookies.txt"</span><span class="token punctuation">)</span>
+
+session <span class="token operator">=</span> requests<span class="token punctuation">.</span>Session<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>session<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>session<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+session<span class="token punctuation">.</span>cookies <span class="token operator">=</span> cookies
+<span class="token keyword">print</span><span class="token punctuation">(</span>session<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>session<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+<p>输出：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">&lt;</span>RequestsCookieJar<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'requests.cookies.RequestsCookieJar'</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>LWPCookieJar<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'http.cookiejar.LWPCookieJar'</span><span class="token operator">></span> </code></pre>
+
+<p>可见，赋值直接改变了<code>session.cookies</code>的类型，使其从<code>RequestsCookieJar</code>变为<code>LWPCookieJar</code>。</p>
+<p>但在 httpx 中不同：</p>
+<pre class="language-python" data-language="python"><code class="language-python">cookies <span class="token operator">=</span> cookielib<span class="token punctuation">.</span>LWPCookieJar<span class="token punctuation">(</span><span class="token string">"bzcookies.txt"</span><span class="token punctuation">)</span>
+
+client <span class="token operator">=</span> httpx<span class="token punctuation">.</span>Client<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+client<span class="token punctuation">.</span>cookies <span class="token operator">=</span> cookies
+<span class="token keyword">print</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+<p>输出：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">&lt;</span>Cookies<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'httpx.Cookies'</span><span class="token operator">></span>
+<span class="token operator">&lt;</span>Cookies<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'httpx.Cookies'</span><span class="token operator">></span></code></pre>
+
+<p>赋值并未改变<code>client.cookies</code>的类型，那传递的值保存在哪里了呢？</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span>jar<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">type</span><span class="token punctuation">(</span>client<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span>jar<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+<p>输出：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">&lt;</span>LWPCookieJar<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token string">'http.cookiejar.LWPCookieJar'</span><span class="token operator">></span></code></pre>
+
+<p><code>httpx.Cookies</code>将 CookieJar 保存在<code>client.cookies.jar</code>中。</p>
+<p>同理，要使用<code>load()</code>或<code>save()</code>，需写为：</p>
+<pre class="language-python" data-language="python"><code class="language-python">client<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span>jar<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token punctuation">)</span>
+client<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span>jar<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+<p>诸如此类的差异很难在一一列出，如果你有其他想法，在下面评论区留言吧！</p>
+<br>
+
+<br>]]></content>
+      <categories>
+        <category>后端编程</category>
+      </categories>
+      <tags>
+        <tag>Python</tag>
+        <tag>分享</tag>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>sakana widget</title>
+    <url>/sakana-widget/</url>
+    <content><![CDATA[<p>放一只sakana在这里</p>
+<span id="more"></span>
+
+<!-- https://cdn.jsdelivr.net/npm/sakana-widget@2.3.0/lib/sakana.min.js -->
+<!-- https://cdnjs.cloudflare.com/ajax/libs/sakana-widget/2.3.0/sakana.min.js -->
+<div id="sakana-widget"></div>
+<script>
+  function initSakanaWidget() {
+    new SakanaWidget().mount('#sakana-widget');
+  }
+</script>
+<script
+  async
+  onload="initSakanaWidget()"
+  src="https://cdn.jsdelivr.net/npm/sakana-widget@2.3.0/lib/sakana.min.js"
+></script>
+]]></content>
+      <categories>
+        <category>小玩具</category>
+      </categories>
+      <tags>
+        <tag>分享</tag>
+      </tags>
+  </entry>
+</search>

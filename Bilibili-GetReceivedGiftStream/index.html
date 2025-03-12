@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="铂屑"><meta name="copyright" content="铂屑"><meta name="generator" content="Hexo 6.3.0"><meta name="theme" content="hexo-theme-yun"><title>Bilibili GetReceivedGiftStream | 铂屑的记录点</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"boxie123.github.io","root":"/","title":"铂屑的记录点","version":"1.10.9","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]},"waline":{"config":{"enable":true,"serverURL":"https://hexo-1v0nhftyo-boxie123.vercel.app/","comment":true,"visitor":true,"emoji":null,"locale":{"placeholder":"填写邮箱，可以收到回复通知哦～"},"requiredMeta":["nick"],"el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="简单记录一下 Python 项目 Bilibili_GetReceivedGiftStream 的开发思路。 某天听到鸽宝说b站查询礼物记录的功能相当反人类，需要一天一天找。 我心想：这不简单，直接全都爬下来。 于是诞生了此项目。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bilibili GetReceivedGiftStream">
+<meta property="og:url" content="https://boxie123.github.io/Bilibili-GetReceivedGiftStream/index.html">
+<meta property="og:site_name" content="铂屑的记录点">
+<meta property="og:description" content="简单记录一下 Python 项目 Bilibili_GetReceivedGiftStream 的开发思路。 某天听到鸽宝说b站查询礼物记录的功能相当反人类，需要一天一天找。 我心想：这不简单，直接全都爬下来。 于是诞生了此项目。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://boxie123.github.io/images/post/cookies-example.png">
+<meta property="article:published_time" content="2022-08-03T15:47:36.000Z">
+<meta property="article:modified_time" content="2022-08-07T13:08:25.000Z">
+<meta property="article:author" content="铂屑">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="分享">
+<meta property="article:tag" content="文档">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://boxie123.github.io/images/post/cookies-example.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="铂屑"><img width="96" loading="lazy" src="/images/face.jpg" alt="铂屑"><span class="site-author-status" title="喜欢你哦">💘</span></a><div class="site-author-name"><a href="/about/">铂屑</a></div><span class="site-name">铂屑的记录点</span><sub class="site-subtitle">时光手札</sub><div class="site-description">听说鼠标悬停在侧边栏的心心上会有惊喜哦</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="我的主页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">11</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">11</span></a></div><a class="site-state-item hty-icon-button" href="/about/#comment" title="留言板"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:clipboard-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/boxie123" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/35192025" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:platinum0shard@gmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1824390830&amp;website=www.oicqzone.com" title="添加QQ好友" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/girls/" title="喜欢的女孩子" style="color:hotpink"><span class="icon iconify" data-icon="ri:hearts-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#login-py"><span class="toc-number">1.</span> <span class="toc-text">login.py</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Cookies-%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">什么是 Cookies ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96-Cookies-%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">如何获取 Cookies ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E7%99%BB%E5%BD%95"><span class="toc-number">1.3.</span> <span class="toc-text">模拟登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E7%99%BB%E9%99%86%E7%8A%B6%E6%80%81"><span class="toc-number">1.4.</span> <span class="toc-text">验证登陆状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookies-%E7%9A%84%E5%82%A8%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96"><span class="toc-number">1.5.</span> <span class="toc-text">Cookies 的储存与读取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getGift-py"><span class="toc-number">2.</span> <span class="toc-text">getGift.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#main-py"><span class="toc-number">3.</span> <span class="toc-text">main.py</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#agent-py"><span class="toc-number">4.</span> <span class="toc-text">agent.py</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://boxie123.github.io/Bilibili-GetReceivedGiftStream/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="铂屑"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="铂屑的记录点"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Bilibili GetReceivedGiftStream<a class="post-edit-link" href="https://github.com/boxie123/boxie123.github.io/tree/hexo/source/_posts/Bilibili-GetReceivedGiftStream.md" target="_blank" title="编辑" rel="noopener"><span class="icon iconify" data-icon="ri:edit-line"></span></a></h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-08-03 23:47:36" itemprop="dateCreated datePublished" datetime="2022-08-03T23:47:36+08:00">2022-08-03</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-08-07 21:08:25" itemprop="dateModified" datetime="2022-08-07T21:08:25+08:00">2022-08-07</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">1.5k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">6m</span></span></span><span class="leancloud_visitors" id="/Bilibili-GetReceivedGiftStream/" data-flag-title="Bilibili GetReceivedGiftStream"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span class="leancloud-visitors-count"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/Bilibili-GetReceivedGiftStream/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E7%BC%96%E7%A8%8B/" style="--text-color:mediumorchid" itemprop="url" rel="index"><span itemprop="text">后端编程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Python/" style="--text-color:mediumblue"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Python</span></a><a class="tag-item" href="/tags/%E5%88%86%E4%BA%AB/" style="--text-color:#0078e7"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">分享</span></a><a class="tag-item" href="/tags/%E6%96%87%E6%A1%A3/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">文档</span></a></span></div><div class="post-author"><span class="author-name">铂屑</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>简单记录一下 Python 项目 <a target="_blank" rel="noopener" href="https://github.com/boxie123/Bilibili_GetReceivedGiftStream">Bilibili_GetReceivedGiftStream</a> 的开发思路。</p>
+<p>某天听到<a target="_blank" rel="noopener" href="https://space.bilibili.com/1485569/">鸽宝</a>说b站查询礼物记录的功能相当反人类，需要一天一天找。</p>
+<p>我心想：<em>这不简单，直接全都爬下来。</em></p>
+<p>于是诞生了此项目。</p>
+<span id="more"></span>
+
+<h2 id="login-py"><a href="#login-py" class="headerlink" title="login.py"></a>login.py</h2><p>首先，肯定要登录b站账号。</p>
+<p>本模块主要功能是获取登录二维码，扫码登陆后记录<code>cookies</code>，并在每次运行时判断<code>cookies</code>是否有效。</p>
+<p>那么问题来了：</p>
+<h3 id="什么是-Cookies-？"><a href="#什么是-Cookies-？" class="headerlink" title="什么是 Cookies ？"></a>什么是 Cookies ？</h3><blockquote>
+<p>Cookie，有时也用其复数形式 Cookies。类型为“小型文本文件”，是某些网站为了辨别用户身份，进行Session跟踪而储存在用户本地终端上的数据（通常经过加密），由用户客户端计算机暂时或永久保存的信息。（摘自百度百科）</p>
+</blockquote>
+<p>简单理解，<code>cookies</code>就是包含在你发送给服务器的请求数据中的一小段文本，用于识别你的身份。比如 bilibili 的<code>cookies</code>包含的是账号登陆信息。</p>
+<h3 id="如何获取-Cookies-？"><a href="#如何获取-Cookies-？" class="headerlink" title="如何获取 Cookies ？"></a>如何获取 Cookies ？</h3><blockquote>
+<p>当用户试图访问某Web站点中需要认证的资源时，Web服务器会检查用户是否提供了认证Cookie，如果没有，则将用户重定向到登录页面。在用户成功登录后，Web服务器会产生认证Cookie，并通过HTTP响应中的Set-Cookie头发送给客户端，用于对用户随后的请求进行检查和验证，接着将用户重定向到初始请求的资源</p>
+</blockquote>
+<p>通过扫码、账号密码、验证码……等方法登录账号后，服务器会产生唯一的一串<code>cookies</code>文本，并返回到你的计算机储存起来。下次再访问此网页的时候，发送给服务器的请求就会带上储存的<code>cookies</code>，服务器经过比对可识别已登录。</p>
+<p>而在已经登陆过的浏览器上，打开开发者工具，同样可以看到本网页对应的<code>cookies</code>：</p>
+<p><img src="/images/post/cookies-example.png" alt="cookies-example" loading="lazy"></p>
+<p>让用户自己去网页复制<code>cookies</code>虽然可行，<del>但会显得我技术不行！</del> </p>
+<p>更优雅的方式应是通过模拟登录自动获取<code>cookies</code>。</p>
+<h3 id="模拟登录"><a href="#模拟登录" class="headerlink" title="模拟登录"></a>模拟登录</h3><p>本文件采用模拟扫码登陆，获取返回的<code>cookies</code>值。</p>
+<p>首先来到 bilibili 的<a target="_blank" rel="noopener" href="https://passport.bilibili.com/login">登陆页面</a>，通过开发者工具的网络日志，可以看到，首先向网址<code>https://passport.bilibili.com/qrcode/getLoginUrl</code>发送了 GET 请求，返回了<code>oauthKey</code>和<code>url</code>等数据，其中<code>oauthKey</code>就是此二维码的<strong>验证密钥</strong>，我们暂时储存下来。</p>
+<p>但是在网络日志中并未找到二维码获取的网址，查找源代码，可看到以下代码：</p>
+<pre class="language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function-variable function">getQrcode</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">var</span> e <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+                    $<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+                        <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"https://passport.bilibili.com/qrcode/getLoginUrl"</span><span class="token punctuation">,</span>
+                        <span class="token literal-property property">dataType</span><span class="token operator">:</span> <span class="token string">"json"</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">t</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>t<span class="token punctuation">.</span>status<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                            e<span class="token punctuation">.</span>refer <span class="token operator">?</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>refer<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>refer<span class="token punctuation">.</span><span class="token function">makeCode</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">:</span> e<span class="token punctuation">.</span><span class="token function">$nextTick</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                e<span class="token punctuation">.</span>refer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">QRCode</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>$refs<span class="token punctuation">.</span>qrcode<span class="token punctuation">,</span><span class="token punctuation">&#123;</span>
+                                    <span class="token literal-property property">text</span><span class="token operator">:</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">,</span>
+                                    <span class="token literal-property property">width</span><span class="token operator">:</span> <span class="token number">140</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">height</span><span class="token operator">:</span> <span class="token number">140</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>key <span class="token operator">=</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>oauthKey<span class="token punctuation">;</span>
+                            <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token function">decodeURIComponent</span><span class="token punctuation">(</span><span class="token function">Object</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>h<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token string">"gourl"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token function">clearTimeout</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>cd<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>cd <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>expire<span class="token punctuation">,</span> e<span class="token punctuation">.</span>cdTime<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            <span class="token function">clearInterval</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>loop<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                            e<span class="token punctuation">.</span>loop <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                $<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+                                    <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">"https://passport.bilibili.com/qrcode/getLoginInfo"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">dataType</span><span class="token operator">:</span> <span class="token string">"json"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">"POST"</span><span class="token punctuation">,</span>
+                                    <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+                                        <span class="token literal-property property">oauthKey</span><span class="token operator">:</span> e<span class="token punctuation">.</span>key<span class="token punctuation">,</span>
+                                        <span class="token literal-property property">gourl</span><span class="token operator">:</span> i <span class="token operator">||</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>referrer <span class="token operator">||</span> <span class="token string">""</span><span class="token punctuation">)</span>
+                                    <span class="token punctuation">&#125;</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">t</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                                    t<span class="token punctuation">.</span>status <span class="token operator">?</span> <span class="token punctuation">(</span>reportMsgObj<span class="token punctuation">.</span>qrcodescan_login <span class="token operator">=</span> <span class="token string">"success"</span><span class="token punctuation">,</span>
+                                    window<span class="token punctuation">.</span>reportObserver <span class="token operator">&amp;&amp;</span> window<span class="token punctuation">.</span>reportObserver<span class="token punctuation">.</span>forceCommit <span class="token operator">&amp;&amp;</span> window<span class="token punctuation">.</span>reportObserver<span class="token punctuation">.</span><span class="token function">forceCommit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                    window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>href <span class="token operator">=</span> t<span class="token punctuation">.</span>data<span class="token punctuation">.</span>url<span class="token punctuation">)</span> <span class="token operator">:</span> t<span class="token punctuation">.</span>status <span class="token operator">||</span> <span class="token operator">-</span><span class="token number">2</span> <span class="token operator">!=</span> t<span class="token punctuation">.</span>message <span class="token operator">?</span> t<span class="token punctuation">.</span>status <span class="token operator">||</span> <span class="token operator">-</span><span class="token number">5</span> <span class="token operator">!=</span> t<span class="token punctuation">.</span>data <span class="token operator">||</span> e<span class="token punctuation">.</span><span class="token function">scanSucess</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> e<span class="token punctuation">.</span><span class="token function">expire</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>loopTime<span class="token punctuation">)</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+                <span class="token punctuation">&#125;</span><span class="token punctuation">,</span></code></pre>
+
+<p>可看到是再次向刚刚得到的<code>url</code>发送 GET 请求，得到二维码对应的链接，并通过 js 直接生成 Base64 发送到前端。</p>
+<p>转化为 Python 代码即为引入<code>qrcode</code>库将链接转为二维码。</p>
+<blockquote>
+<p>使用<code>showpng</code>类新建线程，可不存储到本地，直接显示二维码图片。</p>
+</blockquote>
+<p>同样，通过网络日志可以看到，每两秒浏览器就会向<code>https://passport.bilibili.com/qrcode/getLoginInfo</code>发送 POST 请求来确定登陆状态，其中：</p>
+<blockquote>
+<p>‘data’: -4：二维码未失效</p>
+<p>‘data’: -5：已扫码</p>
+<p>‘data’: -2：二维码已失效</p>
+<p>‘status’: True：已登录</p>
+</blockquote>
+<p>构建<code>while True</code>循环，并在每次循环后等待两秒。</p>
+<p>访问登陆成功后返回的带参数的<code>url</code>，获取<code>cookies</code>值并存储。</p>
+<h3 id="验证登陆状态"><a href="#验证登陆状态" class="headerlink" title="验证登陆状态"></a>验证登陆状态</h3><p>同样，向<code>https://api.bilibili.com/x/web-interface/nav</code>发送 GET 请求，通过返回数据判断：</p>
+<blockquote>
+<p>‘code’: -101 即为未登录；</p>
+<p>‘code’: 0 即为已登录。</p>
+</blockquote>
+<h3 id="Cookies-的储存与读取"><a href="#Cookies-的储存与读取" class="headerlink" title="Cookies 的储存与读取"></a>Cookies 的储存与读取</h3><p>因 requests 库的官网已无法访问（详见<a target="_blank" rel="noopener" href="https://www.163.com/dy/article/H8QB97VK0511CUMI.html">此文</a>），此处仅大致介绍 CookieJar 相关用法，并建议读者尽量转用<code>httpx</code>或<code>aiohttp</code>等代替。</p>
+<p>其中<code>httpx</code>在几乎完美代替<code>requests</code>的基础上支持了异步操作。</p>
+<p>什么是 CookieJar 呢？</p>
+<blockquote>
+<p>CookieJar 是 requests 定义的类，requests 只能保持 cookiejar 类型的 cookie ，而我们手动构建的 cookie 是 dict 类型的。所以要把 dict 转为 cookiejar 类型。</p>
+</blockquote>
+<p>其中又包含四种子类：</p>
+<ul>
+<li><code>CookieJar</code>：管理HTTP cookie值、存储HTTP请求生成的cookie、向传出的HTTP请求添加cookie的对象。整个cookie都存储在内存中，对CookieJar实例进行垃圾回收后cookie也将丢失。</li>
+<li><code>FileCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从CookieJar派生而来，用来创建FileCookieJar实例，检索cookie信息并将cookie存储到文件中。filename是存储cookie的文件名。delayload为True时支持延迟访问访问文件，即只有在需要时才读取文件或在文件中存储数据。</li>
+<li><code>MozillaCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从FileCookieJar派生而来，创建与Mozilla浏览器 cookies.txt兼容的FileCookieJar实例。</li>
+<li><code>LWPCookieJar</code> (filename,delayload&#x3D;None,policy&#x3D;None)：从FileCookieJar派生而来，创建与libwww-perl标准的 Set-Cookie3 文件格式兼容的FileCookieJar实例。</li>
+</ul>
+<blockquote>
+<p>一般来说我们仅会用到后两种。</p>
+</blockquote>
+<p>此处采用<code>LWPCookieJar</code>保存获得的 Cookies 。首先导入 cookiejar 类：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> http<span class="token punctuation">.</span>cookiejar <span class="token keyword">as</span> cookielib</code></pre>
+
+<p>创建 session 链接并从文件读取 cookies：</p>
+<pre class="language-python" data-language="python"><code class="language-python">session <span class="token operator">=</span> requests<span class="token punctuation">.</span>session<span class="token punctuation">(</span><span class="token punctuation">)</span>
+session<span class="token punctuation">.</span>cookies <span class="token operator">=</span> cookielib<span class="token punctuation">.</span>LWPCookieJar<span class="token punctuation">(</span>filename<span class="token operator">=</span>filename<span class="token punctuation">)</span></code></pre>
+
+<p>最后，获取到 cookies 后，通过<code>session.cookies.save()</code>保存到本地，下次直接读取。</p>
+<h2 id="getGift-py"><a href="#getGift-py" class="headerlink" title="getGift.py"></a>getGift.py</h2><p>因爬取礼物流水数据可能需要多次发送请求，本模块采用异步操作提高效率，引入<code>aiohttp</code>库。</p>
+<blockquote>
+<p>咕咕咕 什么时候有时间再继续写</p>
+</blockquote>
+<h2 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h2><h2 id="agent-py"><a href="#agent-py" class="headerlink" title="agent.py"></a>agent.py</h2></div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-heart-line"></span></span><div id="reward-comment">什么？你要请我喝奶茶？ヾ(•ω•`)o</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://www.bilibili.com/v/pay/charge/?upmid=35192025&amp;upurl=%2F%2Fspace.bilibili.com%2F35192025&amp;upname=Pt_ion&amp;upavatar=https%3A%2F%2Fi0.hdslb.com%2Fbfs%2Fface%2F1074c8b414bb03de2e4c8f9724ab23dfed3f3c2c.webp&amp;oid=35192025&amp;otype=up&amp;from=space_index"><img loading="lazy" src="/images/aigeface.jpg" alt="bilibili" title="bilibili"></a><div><span style="color:darkred"><span class="icon iconify" data-icon="ri:battery-saver-line"></span></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://ifdian.net/a/pt_ion"><img loading="lazy" src="/images/aigeface2.jpg" alt="爱发电" title="爱发电"></a><div><span style="color:gold"><span class="icon iconify" data-icon="ri:user-add-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>铂屑</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://boxie123.github.io/Bilibili-GetReceivedGiftStream/" title="Bilibili GetReceivedGiftStream">https://boxie123.github.io/Bilibili-GetReceivedGiftStream/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/requests-to-httpx/" rel="prev" title="从 Requests 转向 Httpx"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">从 Requests 转向 Httpx</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/conda-or-poetry/" rel="next" title="Anaconda完全卸载与Poetry安装"><span class="post-nav-text">Anaconda完全卸载与Poetry安装</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>↓↓↓跳转issues和discussions评论，回复更及时哦↓↓↓</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/issues?q=is:issue+Bilibili GetReceivedGiftStream">GitHub Issues</a><a class="hty-button hty-button--raised" id="github-discussions" target="_blank" rel="noopener" href="https://github.com/boxie123/boxie123.github.io/discussions/new">GitHub Discussions</a></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/Bilibili-GetReceivedGiftStream/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2022 – 2025 </span><a class="with-love" id="animate" href="/about/" title="铂屑"><span class="icon iconify" data-icon="carbon:chemistry"></span></a><span class="author"> 铂屑</span></div><div class="live-time"><span>本博客已上工</span><span id="display_live_time"></span><span class="moe-text">（；´д｀）ゞ</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2022-07-23T04:57:57');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","7-7"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script></body></html>
