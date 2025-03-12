@@ -137,18 +137,18 @@ reward:
   icon: ri:hand-heart-line
   color: '#FF8EB3'
   # url: https://space.bilibili.com/1485569
-  comment: 给可爱的鸽宝一点支持吧ヾ(•ω•`)o
+  comment: 什么？你要请我喝奶茶？ヾ(•ω•`)o
   methods:
-    - name: 关注！
+    - name: bilibili
       path: /images/aigeface.jpg
-      link: https://space.bilibili.com/1485569
+      link: https://www.bilibili.com/v/pay/charge/?upmid=35192025&upurl=%2F%2Fspace.bilibili.com%2F35192025&upname=Pt_ion&upavatar=https%3A%2F%2Fi0.hdslb.com%2Fbfs%2Fface%2F1074c8b414bb03de2e4c8f9724ab23dfed3f3c2c.webp&oid=35192025&otype=up&from=space_index
       color: darkred
-      icon: ri:user-add-line
-    - name: 充电！
-      path: /images/aigeface2.jpg
-      link: https://www.bilibili.com/v/pay/charge?upmid=1485569&upurl=%2F%2Fspace.bilibili.com%2F1485569&upname=%E8%89%BE%E9%B8%BD%E6%B3%B0%E5%B0%94%E5%BE%B7&upavatar=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2Fc86cec17c8343a4b7a5f7e2d29447a9ba521a5be.jpg&oid=1485569&otype=up&from=zone
-      color: gold
       icon: ri:battery-saver-line
+    - name: 爱发电
+      path: /images/aigeface2.jpg
+      link: https://ifdian.net/a/pt_ion
+      color: gold
+      icon: ri:user-add-line
 wordcount:
   enable: true
   count: true
